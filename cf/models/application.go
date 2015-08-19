@@ -35,6 +35,7 @@ func (model Application) ToParams() (params AppParams) {
 		State:           &state,
 		SpaceGuid:       &model.SpaceGuid,
 		EnvironmentVars: &model.EnvironmentVars,
+		Bandwidth:       &model.Bandwidth,
 	}
 
 	if model.Stack != nil {
@@ -64,6 +65,7 @@ type ApplicationFields struct {
 	StagingFailedReason  string
 	Buildpack            string
 	DetectedBuildpack    string
+	Bandwidth            int64 // in Kilobits
 }
 
 type AppParams struct {
@@ -87,6 +89,7 @@ type AppParams struct {
 	StackGuid          *string
 	StackName          *string
 	State              *string
+	Bandwidth          *int64
 }
 
 func (app *AppParams) Merge(other *AppParams) {
@@ -143,6 +146,10 @@ func (app *AppParams) Merge(other *AppParams) {
 	}
 	if other.State != nil {
 		app.State = other.State
+	}
+
+	if other.Bandwidth != nil {
+		app.Bandwidth = other.Bandwidth
 	}
 
 	app.NoRoute = app.NoRoute || other.NoRoute
