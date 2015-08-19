@@ -161,6 +161,8 @@ func mapToAppParams(basePath string, yamlMap generic.Map) (appParams models.AppP
 	appParams.ServicesToBind = sliceOrEmptyVal(yamlMap, "services", &errs)
 	appParams.EnvironmentVars = envVarOrEmptyMap(yamlMap, &errs)
 
+	appParams.Bandwidth = bitsVal(yamlMap, "bandwidth", &errs)
+
 	if appParams.Path != nil {
 		path := *appParams.Path
 		if filepath.IsAbs(path) {
@@ -245,6 +247,26 @@ func bytesVal(yamlMap generic.Map, key string, errs *[]error) *int64 {
 
 	stringVal := coerceToString(yamlVal)
 	value, err := formatters.ToMegabytes(stringVal)
+	if err != nil {
+		*errs = append(*errs, errors.NewWithFmt(T("Invalid value for '{{.PropertyName}}': {{.StringVal}}\n{{.Error}}",
+			map[string]interface{}{
+				"PropertyName": key,
+				"Error":        err.Error(),
+				"StringVal":    stringVal,
+			})))
+		return nil
+	}
+	return &value
+}
+
+func bitsVal(yamlMap generic.Map, key string, errs *[]error) *int64 {
+	yamlVal := yamlMap.Get(key)
+	if yamlVal == nil {
+		return nil
+	}
+
+	stringVal := coerceToString(yamlVal)
+	value, err := formatters.ToKilobits(stringVal)
 	if err != nil {
 		*errs = append(*errs, errors.NewWithFmt(T("Invalid value for '{{.PropertyName}}': {{.StringVal}}\n{{.Error}}",
 			map[string]interface{}{

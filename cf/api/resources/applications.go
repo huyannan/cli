@@ -55,6 +55,7 @@ type ApplicationEntity struct {
 	PackageState         *string                 `json:"package_state,omitempty"`
 	StagingFailedReason  *string                 `json:"staging_failed_reason,omitempty"`
 	Diego                bool                    `json:"diego,omitempty"`
+	Bandwidth            *int64                  `json:"bandwith_in_kb,omitempty"`
 }
 
 func (resource AppRouteResource) ToFields() (route models.RouteSummary) {
@@ -82,6 +83,7 @@ func NewApplicationEntityFromAppParams(app models.AppParams) ApplicationEntity {
 		StackGuid:          app.StackGuid,
 		Command:            app.Command,
 		HealthCheckTimeout: app.HealthCheckTimeout,
+		Bandwidth:          app.Bandwidth,
 	}
 	if app.State != nil {
 		state := strings.ToUpper(*app.State)
@@ -103,6 +105,11 @@ func (resource ApplicationResource) ToFields() (app models.ApplicationFields) {
 	if entity.Memory != nil {
 		app.Memory = *entity.Memory
 	}
+
+	if entity.Bandwidth != nil {
+		app.Bandwidth = *entity.Bandwidth
+	}
+
 	if entity.DiskQuota != nil {
 		app.DiskQuota = *entity.DiskQuota
 	}

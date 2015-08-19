@@ -71,13 +71,14 @@ func (cmd *Push) MetaData() command_registry.CommandMetadata {
 	fs["no-route"] = &cliFlags.BoolFlag{Name: "no-route", Usage: T("Do not map a route to this app and remove routes from previous pushes of this app.")}
 	fs["no-start"] = &cliFlags.BoolFlag{Name: "no-start", Usage: T("Do not start an app after pushing")}
 	fs["random-route"] = &cliFlags.BoolFlag{Name: "random-route", Usage: T("Create a random route for this app")}
+	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Bandwidth limit (e.g. 1024K, 1M, 10M)")}
 
 	return command_registry.CommandMetadata{
 		Name:        "push",
 		ShortName:   "p",
 		Description: T("Push a new app or sync changes to an existing app"),
 		Usage: T("Push a single app (with or without a manifest):\n") + T("   CF_NAME push APP_NAME [-b BUILDPACK_NAME] [-c COMMAND] [-d DOMAIN] [-f MANIFEST_PATH]\n") + T("   [-i NUM_INSTANCES] [-k DISK] [-m MEMORY] [-n HOST] [-p PATH] [-s STACK] [-t TIMEOUT]\n") +
-			"   [--no-hostname] [--no-manifest] [--no-route] [--no-start]\n" +
+			"   [--bandwidth BANDWIDTH] [--no-hostname] [--no-manifest] [--no-route] [--no-start]\n" +
 			"\n" + T("   Push multiple apps with a manifest:\n") + T("   CF_NAME push [-f MANIFEST_PATH]\n"),
 		Flags: fs,
 	}
@@ -551,6 +552,15 @@ func (cmd *Push) getAppParamsFromContext(c flags.FlagContext) (appParams models.
 				map[string]interface{}{"MemLimit": c.String("m"), "Err": err.Error()}))
 		}
 		appParams.Memory = &memory
+	}
+
+	if c.String("bandwidth") != "" {
+		bandwidth, err := formatters.ToKilobits(c.String("bandwidth")) //need to define Tokilobits func
+		if err != nil {
+			cmd.ui.Failed(T("Invalid bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+				map[string]interface{}{"BandwidthLimit": c.String("bandwidth"), "Err": err.Error()}))
+		}
+		appParams.Bandwidth = &bandwidth
 	}
 
 	if c.String("p") != "" {
