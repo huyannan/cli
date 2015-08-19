@@ -13,12 +13,14 @@ const (
 )
 
 type AppInstanceFields struct {
-	State     InstanceState
-	Details   string
-	Since     time.Time
-	CpuUsage  float64 // percentage
-	DiskQuota int64   // in bytes
-	DiskUsage int64
-	MemQuota  int64
-	MemUsage  int64
+	State          InstanceState
+	Details        string
+	Since          time.Time
+	CpuUsage       float64 // percentage
+	DiskQuota      int64   // in bytes
+	DiskUsage      int64
+	MemQuota       int64
+	MemUsage       int64
+	BandwidthQuota int64 //in Kilobytes
+	BandwidthUsage int64
 }
