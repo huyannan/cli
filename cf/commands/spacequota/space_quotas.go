@@ -64,8 +64,9 @@ func (cmd *ListSpaceQuotas) Execute(c flags.FlagContext) {
 	cmd.ui.Ok()
 	cmd.ui.Say("")
 
-	table := terminal.NewTable(cmd.ui, []string{T("name"), T("total memory limit"), T("instance memory limit"), T("routes"), T("service instances"), T("paid service plans")})
+	table := terminal.NewTable(cmd.ui, []string{T("name"), T("total memory limit"), T("instance memory limit"), T("routes"), T("service instances"), T("total bandwidth limit"), T("instance bandwidth limit"), T("paid service plans")})
 	var megabytes string
+	var kilobits string
 
 	for _, quota := range quotas {
 		if quota.InstanceMemoryLimit == -1 {
@@ -79,12 +80,20 @@ func (cmd *ListSpaceQuotas) Execute(c flags.FlagContext) {
 			servicesLimit = T("unlimited")
 		}
 
+		if quota.InstanceBandwidthLimit == -1 {
+			kilobits = T("unlimited")
+		} else {
+			kilobits = formatters.BitSize(quota.InstanceBandwidthLimit * formatters.KILOBIT)
+		}
+
 		table.Add(
 			quota.Name,
 			formatters.ByteSize(quota.MemoryLimit*formatters.MEGABYTE),
 			megabytes,
 			fmt.Sprintf("%d", quota.RoutesLimit),
 			fmt.Sprintf(servicesLimit),
+			formatters.BitSize(quota.BandwidthLimit*formatters.KILOBIT),
+			kilobits,
 			formatters.Allowed(quota.NonBasicServicesAllowed),
 		)
 	}

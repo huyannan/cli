@@ -23,5 +23,7 @@ func (resource SpaceQuotaResource) ToModel() models.SpaceQuota {
 		ServicesLimit:           entity.ServicesLimit,
 		NonBasicServicesAllowed: entity.NonBasicServicesAllowed,
 		OrgGuid:                 entity.OrgGuid,
+		BandwidthLimit:          entity.BandwidthLimit,
+		InstanceBandwidthLimit:  entity.InstanceBandwidthLimit,
 	}
 }

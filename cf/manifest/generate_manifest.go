@@ -10,6 +10,9 @@ import (
 type AppManifest interface {
 	BuildpackUrl(string, string)
 	Memory(string, int64)
+
+	Bandwidth(string, int64)
+
 	Service(string, string)
 	StartCommand(string, string)
 	EnvironmentVars(string, string, string)
@@ -37,6 +40,11 @@ func (m *appManifest) FileSavePath(savePath string) {
 func (m *appManifest) Memory(appName string, memory int64) {
 	i := m.findOrCreateApplication(appName)
 	m.contents[i].Memory = memory
+}
+
+func (m *appManifest) Bandwidth(appName string, bandwidth int64) {
+	i := m.findOrCreateApplication(appName)
+	m.contents[i].Bandwidth = bandwidth
 }
 
 func (m *appManifest) StartCommand(appName string, cmd string) {

@@ -162,7 +162,14 @@ func (cmd *ShowSpace) quotaString(space models.Space) string {
 	}
 	memory := formatters.ByteSize(quota.MemoryLimit * formatters.MEGABYTE)
 
-	spaceQuota := fmt.Sprintf("%s (%s memory limit, %s instance memory limit, %d routes, %d services, paid services %s)", quota.Name, memory, instance_memory, quota.RoutesLimit, quota.ServicesLimit, formatters.Allowed(quota.NonBasicServicesAllowed))
+	if quota.InstanceBandwidthLimit == -1 {
+		instance_bandwidth = "-1"
+	} else {
+		instance_bandwidth = formatters.BitSize(quota.InstanceBandwidthLimit * formatters.KILOBIT)
+	}
+	bandwidth := formatters.BitSize(quota.BandwidthLimit * formatters.KILOBIT)
+
+	spaceQuota := fmt.Sprintf("%s (%s memory limit, %s instance memory limit, %d routes, %d services, %s bandwidth limit, %s instance bandwidth limit, paid services %s)", quota.Name, memory, instance_memory, quota.RoutesLimit, quota.ServicesLimit, bandwidth, instance_bandwidth, formatters.Allowed(quota.NonBasicServicesAllowed))
 	//	spaceQuota := fmt.Sprintf(T("{{.QuotaName}} ({{.MemoryLimit}} memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, paid services {{.NonBasicServicesAllowed}})",
 	//		map[string]interface{}{
 	//			"QuotaName":               quota.Name,
@@ -224,6 +231,8 @@ func (cmd *ShowSpace) populatePluginModel(space models.Space) {
 		cmd.pluginModel.SpaceQuota.InstanceMemoryLimit = quota.InstanceMemoryLimit
 		cmd.pluginModel.SpaceQuota.RoutesLimit = quota.RoutesLimit
 		cmd.pluginModel.SpaceQuota.ServicesLimit = quota.ServicesLimit
+		cmd.pluginModel.SpaceQuota.BandwidthLimit = quota.BandwidthLimit
+		cmd.pluginModel.SpaceQuota.InstanceBandwidthLimit = quota.InstanceBandwidthLimit
 		cmd.pluginModel.SpaceQuota.NonBasicServicesAllowed = quota.NonBasicServicesAllowed
 	}
 }

@@ -31,11 +31,13 @@ func (cmd *UpdateSpaceQuota) MetaData() command_registry.CommandMetadata {
 	fs["s"] = &cliFlags.IntFlag{Name: "s", Usage: T("Total number of service instances")}
 	fs["allow-paid-service-plans"] = &cliFlags.BoolFlag{Name: "allow-paid-service-plans", Usage: T("Can provision instances of paid service plans")}
 	fs["disallow-paid-service-plans"] = &cliFlags.BoolFlag{Name: "disallow-paid-service-plans", Usage: T("Can not provision instances of paid service plans")}
+	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.")}
+	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Total amount of bandwidth (e.g. 1024K, 1M, 10M)")}
 
 	return command_registry.CommandMetadata{
 		Name:        "update-space-quota",
 		Description: T("update an existing space quota"),
-		Usage:       T("CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--allow-paid-service-plans | --disallow-paid-service-plans]"),
+		Usage:       T("CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]"),
 		Flags:       fs,
 	}
 }
@@ -108,6 +110,34 @@ func (cmd *UpdateSpaceQuota) Execute(c flags.FlagContext) {
 		}
 
 		spaceQuota.MemoryLimit = memory
+	}
+
+	if c.String("instance-bandwidth") != "" {
+		var bandwidth int64
+		var formatError error
+
+		bandwidthFlag := c.String("instance-bandwidth")
+
+		if bandwidthFlag == "-1" {
+			bandwidth = -1
+		} else {
+			bandwidth, formatError = formatters.ToKilobits(bandwidthFlag)
+			if formatError != nil {
+				cmd.ui.Failed(T("Incorrect Usage\n\n") + command_registry.Commands.CommandUsage("update-space-quota"))
+			}
+		}
+
+		spaceQuota.InstanceMemoryLimit = bandwidth
+	}
+
+	if c.String("bandwidth") != "" {
+		bandwidth, formatError := formatters.ToKilobits(c.String("bandwidth"))
+
+		if formatError != nil {
+			cmd.ui.Failed(T("Incorrect Usage\n\n") + command_registry.Commands.CommandUsage("update-space-quota"))
+		}
+
+		spaceQuota.BandwidthLimit = bandwidth
 	}
 
 	if c.String("n") != "" {

@@ -92,13 +92,15 @@ func (cmd *ShowOrg) Execute(c flags.FlagContext) {
 		}
 
 		quota := org.QuotaDefinition
-		orgQuota := fmt.Sprintf(T("{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, paid services {{.NonBasicServicesAllowed}})",
+		orgQuota := fmt.Sprintf(T("{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, {{.BandwidthLimit}}Kb bandwidth limit, {{.InstanceBandwidthLimit}} instance bandwidth limit, paid services {{.NonBasicServicesAllowed}})",
 			map[string]interface{}{
 				"QuotaName":               quota.Name,
 				"MemoryLimit":             quota.MemoryLimit,
 				"InstanceMemoryLimit":     formatters.InstanceMemoryLimit(quota.InstanceMemoryLimit),
 				"RoutesLimit":             quota.RoutesLimit,
 				"ServicesLimit":           quota.ServicesLimit,
+				"BandwidthLimit":          quota.BandwidthLimit,
+				"InstanceBandwidthLimit":  formatters.InstanceBandwidthLimit(quota.InstanceBandwidthLimit),
 				"NonBasicServicesAllowed": formatters.Allowed(quota.NonBasicServicesAllowed)}))
 
 		if cmd.pluginCall {
@@ -123,6 +125,8 @@ func (cmd *ShowOrg) populatePluginModel(org models.Organization, quota models.Qu
 	cmd.pluginModel.QuotaDefinition.RoutesLimit = quota.RoutesLimit
 	cmd.pluginModel.QuotaDefinition.ServicesLimit = quota.ServicesLimit
 	cmd.pluginModel.QuotaDefinition.NonBasicServicesAllowed = quota.NonBasicServicesAllowed
+	cmd.pluginModel.QuotaDefinition.BandwidthLimit = quota.BandwidthLimit
+	cmd.pluginModel.QuotaDefinition.InstanceBandwidthLimit = quota.InstanceBandwidthLimit
 
 	for _, domain := range org.Domains {
 		d := plugin_models.GetOrg_Domains{
@@ -144,10 +148,12 @@ func (cmd *ShowOrg) populatePluginModel(org models.Organization, quota models.Qu
 
 	for _, spaceQuota := range org.SpaceQuotas {
 		sq := plugin_models.GetOrg_SpaceQuota{
-			Name:                spaceQuota.Name,
-			Guid:                spaceQuota.Guid,
-			MemoryLimit:         spaceQuota.MemoryLimit,
-			InstanceMemoryLimit: spaceQuota.InstanceMemoryLimit,
+			Name:                   spaceQuota.Name,
+			Guid:                   spaceQuota.Guid,
+			MemoryLimit:            spaceQuota.MemoryLimit,
+			InstanceMemoryLimit:    spaceQuota.InstanceMemoryLimit,
+			BandwidthLimit:         spaceQuota.BandwidthLimit,
+			InstanceBandwidthLimit: spaceQuota.InstanceBandwidthLimit,
 		}
 		cmd.pluginModel.SpaceQuotas = append(cmd.pluginModel.SpaceQuotas, sq)
 	}

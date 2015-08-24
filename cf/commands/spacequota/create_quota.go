@@ -32,12 +32,14 @@ func (cmd *CreateSpaceQuota) MetaData() command_registry.CommandMetadata {
 	fs["i"] = &cliFlags.StringFlag{Name: "i", Usage: T("Maximum amount of memory an application instance can have (e.g. 1024M, 1G, 10G). -1 represents an unlimited amount. (Default: unlimited)")}
 	fs["m"] = &cliFlags.StringFlag{Name: "m", Usage: T("Total amount of memory a space can have (e.g. 1024M, 1G, 10G)")}
 	fs["r"] = &cliFlags.IntFlag{Name: "r", Usage: T("Total number of routes")}
+	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.")}
+	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Total amount of bandwidth (e.g. 1024K, 1M, 10M)")}
 	fs["s"] = &cliFlags.IntFlag{Name: "s", Usage: T("Total number of service instances")}
 
 	return command_registry.CommandMetadata{
 		Name:        "create-space-quota",
 		Description: T("Define a new space resource quota"),
-		Usage:       T("CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]"),
+		Usage:       T("CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]"),
 		Flags:       fs,
 	}
 }
@@ -99,6 +101,29 @@ func (cmd *CreateSpaceQuota) Execute(context flags.FlagContext) {
 	}
 
 	quota.InstanceMemoryLimit = parsedMemory
+
+	bandwidthLimit := context.String("bandwidth")
+	if bandwidthLimit != "" {
+		parsedBandwidth, errr := formatters.ToKilobits(bandwidthLimit)
+		if errr != nil {
+			cmd.ui.Failed(T("Invalid bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}", map[string]interface{}{"BandwidthLimit": bandwidthLimit, "Err": errr}))
+		}
+
+		quota.BandwidthLimit = parsedBandwidth
+	}
+
+	instanceBandwidthLimit := context.String("instance-bandwidth")
+	var parsedBandwidth int64
+	var err error
+	if instanceBandwidthLimit == "-1" || instanceBandwidthLimit == "" {
+		parsedBandwidth = -1
+	} else {
+		parsedBandwidth, err = formatters.ToKilobits(instanceBandwidthLimit)
+		if err != nil {
+			cmd.ui.Failed(T("Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}", map[string]interface{}{"BandwidthLimit": instanceBandwidthLimit, "Err": err}))
+		}
+	}
+	quota.InstanceBandwidthLimit = parsedBandwidth
 
 	if context.IsSet("r") {
 		quota.RoutesLimit = context.Int("r")

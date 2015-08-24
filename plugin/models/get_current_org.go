@@ -17,5 +17,7 @@ type QuotaFields struct {
 	InstanceMemoryLimit     int64
 	RoutesLimit             int
 	ServicesLimit           int
+	BandwidthLimit          int64
+	InstanceBandwidthLimit  int64
 	NonBasicServicesAllowed bool
 }

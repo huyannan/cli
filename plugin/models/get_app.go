@@ -24,17 +24,20 @@ type GetAppModel struct {
 	Instances            []GetApp_AppInstanceFields
 	Routes               []GetApp_RouteSummary
 	Services             []GetApp_ServiceSummary
+	Bandwidth            int64 // in Kilobits
 }
 
 type GetApp_AppInstanceFields struct {
-	State     string
-	Details   string
-	Since     time.Time
-	CpuUsage  float64 // percentage
-	DiskQuota int64   // in bytes
-	DiskUsage int64
-	MemQuota  int64
-	MemUsage  int64
+	State          string
+	Details        string
+	Since          time.Time
+	CpuUsage       float64 // percentage
+	DiskQuota      int64   // in bytes
+	DiskUsage      int64
+	MemQuota       int64
+	MemUsage       int64
+	BandwidthQuota int64 // in Kilobits
+	BandwidthUsage int64
 }
 
 type GetApp_Stack struct {

@@ -90,6 +90,9 @@ func (cmd *CreateAppManifest) Execute(c flags.FlagContext) {
 func (cmd *CreateAppManifest) createManifest(app models.Application, savePath string) error {
 	cmd.manifest.FileSavePath(savePath)
 	cmd.manifest.Memory(app.Name, app.Memory)
+
+	cmd.manifest.Bandwidth(app.Name, app.Bandwidth)
+
 	cmd.manifest.Instances(app.Name, app.InstanceCount)
 
 	if app.Command != "" {

@@ -8,6 +8,7 @@ type GetAppsModel struct {
 	RunningInstances int
 	Memory           int64
 	DiskQuota        int64
+	Bandwidth        int64
 	Routes           []GetAppsRouteSummary
 }
 

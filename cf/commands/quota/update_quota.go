@@ -31,11 +31,13 @@ func (cmd *updateQuota) MetaData() command_registry.CommandMetadata {
 	fs["n"] = &cliFlags.StringFlag{Name: "n", Usage: T("New name")}
 	fs["r"] = &cliFlags.IntFlag{Name: "r", Usage: T("Total number of routes")}
 	fs["s"] = &cliFlags.IntFlag{Name: "s", Usage: T("Total number of service instances")}
+	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.")}
+	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Total amount of bandwidth (e.g. 1024K, 1M, 10M)")}
 
 	return command_registry.CommandMetadata{
 		Name:        "update-quota",
 		Description: T("Update an existing resource quota"),
-		Usage:       T("CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]"),
+		Usage:       T("CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]"),
 		Flags:       fs,
 	}
 }
@@ -105,6 +107,34 @@ func (cmd *updateQuota) Execute(c flags.FlagContext) {
 		}
 
 		quota.MemoryLimit = memory
+	}
+
+	if c.String("instance-bandwidth") != "" {
+		var instanceBandwidth int64
+
+		if c.String("instance-bandwidth") == "-1" {
+			instanceBandwidth = -1
+		} else {
+			var formatError error
+
+			instanceBandwidth, formatError = formatters.ToKilobits(c.String("instance-bandwidth"))
+
+			if formatError != nil {
+				cmd.ui.Failed(T("Incorrect Usage.\n\n") + command_registry.Commands.CommandUsage("update-quota"))
+			}
+		}
+
+		quota.InstanceBandwidthLimit = instanceBandwidth
+	}
+
+	if c.String("bandwidth") != "" {
+		bandwidth, formatError := formatters.ToKilobits(c.String("bandwidth"))
+
+		if formatError != nil {
+			cmd.ui.Failed(T("Incorrect Usage.\n\n") + command_registry.Commands.CommandUsage("update-quota"))
+		}
+
+		quota.BandwidthLimit = bandwidth
 	}
 
 	if c.String("n") != "" {

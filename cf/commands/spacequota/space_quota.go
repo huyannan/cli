@@ -79,6 +79,13 @@ func (cmd *SpaceQuota) Execute(c flags.FlagContext) {
 		megabytes = formatters.ByteSize(spaceQuota.InstanceMemoryLimit * formatters.MEGABYTE)
 	}
 
+	var kilobits string
+	if spaceQuota.InstanceBandwidthLimit == -1 {
+		kilobits = T("unlimited")
+	} else {
+		kilobits = formatters.BitSize(spaceQuota.InstanceBandwidthLimit * formatters.KILOBIT)
+	}
+
 	servicesLimit := strconv.Itoa(spaceQuota.ServicesLimit)
 	if servicesLimit == "-1" {
 		servicesLimit = T("unlimited")
@@ -87,6 +94,8 @@ func (cmd *SpaceQuota) Execute(c flags.FlagContext) {
 	table.Add(T("instance memory limit"), megabytes)
 	table.Add(T("routes"), fmt.Sprintf("%d", spaceQuota.RoutesLimit))
 	table.Add(T("services"), servicesLimit)
+	table.Add(T("total bandwidth limit"), formatters.BitSize(spaceQuota.BandwidthLimit*formatters.KILOBIT))
+	table.Add(T("instance bandwidth limit"), kilobits)
 	table.Add(T("non basic services"), formatters.Allowed(spaceQuota.NonBasicServicesAllowed))
 
 	table.Print()

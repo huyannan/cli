@@ -91,7 +91,7 @@ func (cmd *ShowApp) SetDependency(deps command_registry.Dependency, pluginCall b
 }
 
 func (cmd *ShowApp) Execute(c flags.FlagContext) {
-	app := cmd.appReq.GetApplication()
+	app := cmd.appReq.GetApplication() // returns models.Application
 
 	if cmd.pluginCall {
 		cmd.pluginAppModel.Name = app.Name
@@ -111,6 +111,7 @@ func (cmd *ShowApp) Execute(c flags.FlagContext) {
 		cmd.pluginAppModel.PackageUpdatedAt = app.PackageUpdatedAt
 		cmd.pluginAppModel.PackageState = app.PackageState
 		cmd.pluginAppModel.StagingFailedReason = app.StagingFailedReason
+		cmd.pluginAppModel.Bandwidth = app.Bandwidth
 
 		cmd.pluginAppModel.Stack = &plugin_models.GetApp_Stack{
 			Name: app.Stack.Name,
@@ -153,7 +154,7 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 			"SpaceName": terminal.EntityNameColor(spaceName),
 			"Username":  terminal.EntityNameColor(cmd.config.Username())}))
 
-	application, apiErr := cmd.appSummaryRepo.GetSummary(app.Guid)
+	application, apiErr := cmd.appSummaryRepo.GetSummary(app.Guid) //returns models.Application
 
 	appIsStopped := (application.State == "stopped")
 	if err, ok := apiErr.(errors.HttpError); ok {
@@ -168,7 +169,7 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 	}
 
 	var instances []models.AppInstanceFields
-	instances, apiErr = cmd.appInstancesRepo.GetInstances(app.Guid)
+	instances, apiErr = cmd.appInstancesRepo.GetInstances(app.Guid) //returns []models.AppInstanceFields
 	if apiErr != nil && !appIsStopped {
 		cmd.ui.Failed(apiErr.Error())
 		return
@@ -230,8 +231,10 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 		return
 	}
 
-	table := terminal.NewTable(cmd.ui, []string{"", T("state"), T("since"), T("cpu"), T("memory"), T("disk"), T("details")})
+	table := terminal.NewTable(cmd.ui, []string{"", T("state"), T("since"), T("cpu"), T("memory"), T("disk") /*T("bandwidth"),*/, T("details")})
 
+	//modified here for bandwidth usage******************************************************
+	//***************************************************************************************
 	for index, instance := range instances {
 		table.Add(
 			fmt.Sprintf("#%d", index),
@@ -246,6 +249,13 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 				map[string]interface{}{
 					"DiskUsage": formatters.ByteSize(instance.DiskUsage),
 					"DiskQuota": formatters.ByteSize(instance.DiskQuota)})),
+			/*
+				//note: need to verify the units of instance.BandwidthUsage and instance.BandwidthQuota with Cloud Controller
+					fmt.Sprintf(T("{{.BandwidthUsage}} of {{.BandwidthQuota}}",
+						map[string]interface{}{
+							"BandwidthUsage": formatters.BitSize(instance.BandwidthUsage),
+							"BandwidthQuota": formatters.BitSize(instance.BandwidthQuota)})),
+			*/
 			fmt.Sprintf("%s", instance.Details),
 		)
 
@@ -259,6 +269,8 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 			i.DiskUsage = instance.DiskUsage
 			i.MemQuota = instance.MemQuota
 			i.MemUsage = instance.MemUsage
+			i.BandwidthQuota = instance.BandwidthQuota // in Kilobits
+			i.BandwidthUsage = instance.BandwidthUsage
 			cmd.pluginAppModel.Instances = append(cmd.pluginAppModel.Instances, i)
 		}
 	}

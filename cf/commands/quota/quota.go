@@ -68,6 +68,13 @@ func (cmd *showQuota) Execute(c flags.FlagContext) {
 		megabytes = formatters.ByteSize(quota.InstanceMemoryLimit * formatters.MEGABYTE)
 	}
 
+	var kilobits string
+	if quota.InstanceBandwidthLimit == -1 {
+		kilobits = T("unlimited")
+	} else {
+		kilobits = formatters.BitSize(quota.InstanceBandwidthLimit * formatters.KILOBIT)
+	}
+
 	servicesLimit := strconv.Itoa(quota.ServicesLimit)
 	if servicesLimit == "-1" {
 		servicesLimit = T("unlimited")
@@ -78,5 +85,7 @@ func (cmd *showQuota) Execute(c flags.FlagContext) {
 	table.Add(T("Routes"), fmt.Sprintf("%d", quota.RoutesLimit))
 	table.Add(T("Services"), servicesLimit)
 	table.Add(T("Paid service plans"), formatters.Allowed(quota.NonBasicServicesAllowed))
+	table.Add(T("Total Bandwidth"), formatters.BitSize(quota.BandwidthLimit*formatters.KILOBIT))
+	table.Add(T("Instance Bandwidth"), kilobits)
 	table.Print()
 }

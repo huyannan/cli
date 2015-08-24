@@ -82,7 +82,7 @@ func (cmd *ListApps) Execute(c flags.FlagContext) {
 		return
 	}
 
-	table := terminal.NewTable(cmd.ui, []string{T("name"), T("requested state"), T("instances"), T("memory"), T("disk"), T("urls")})
+	table := terminal.NewTable(cmd.ui, []string{T("name"), T("requested state"), T("instances"), T("memory"), T("disk"), T("bandwidth"), T("urls")})
 
 	for _, application := range apps {
 		var urls []string
@@ -96,6 +96,7 @@ func (cmd *ListApps) Execute(c flags.FlagContext) {
 			ui_helpers.ColoredAppInstances(application.ApplicationFields),
 			formatters.ByteSize(application.Memory*formatters.MEGABYTE),
 			formatters.ByteSize(application.DiskQuota*formatters.MEGABYTE),
+			formatters.BitSize(application.Bandwidth*formatters.KILOBIT),
 			strings.Join(urls, ", "),
 		)
 	}
@@ -117,7 +118,7 @@ func (cmd *ListApps) populatePluginModel(apps []models.Application) {
 		appModel.Memory = app.Memory
 		appModel.State = app.State
 		appModel.DiskQuota = app.DiskQuota
-
+		appModel.Bandwidth = app.Bandwidth
 		*(cmd.pluginAppModels) = append(*(cmd.pluginAppModels), appModel)
 
 		for _, route := range app.Routes {

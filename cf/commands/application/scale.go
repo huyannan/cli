@@ -31,11 +31,12 @@ func (cmd *Scale) MetaData() command_registry.CommandMetadata {
 	fs["k"] = &cliFlags.StringFlag{Name: "k", Usage: T("Disk limit (e.g. 256M, 1024M, 1G)")}
 	fs["m"] = &cliFlags.StringFlag{Name: "m", Usage: T("Memory limit (e.g. 256M, 1024M, 1G)")}
 	fs["f"] = &cliFlags.BoolFlag{Name: "f", Usage: T("Force restart of app without prompt")}
+	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Bandwidth limit (e.g. 1024K, 1M, 10M)")}
 
 	return command_registry.CommandMetadata{
 		Name:        "scale",
 		Description: T("Change or view the instance count, disk space limit, and memory limit for an app"),
-		Usage:       T("CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [-f]"),
+		Usage:       T("CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [--bandwidth BANDWIDTH] [-f]"),
 		Flags:       fs,
 	}
 }
@@ -86,6 +87,7 @@ func (cmd *Scale) Execute(c flags.FlagContext) {
 		cmd.ui.Say("%s %s", terminal.HeaderColor(T("memory:")), formatters.ByteSize(currentApp.Memory*bytesInAMegabyte))
 		cmd.ui.Say("%s %s", terminal.HeaderColor(T("disk:")), formatters.ByteSize(currentApp.DiskQuota*bytesInAMegabyte))
 		cmd.ui.Say("%s %d", terminal.HeaderColor(T("instances:")), currentApp.InstanceCount)
+		cmd.ui.Say("%s %d", terminal.HeaderColor(T("bandwidth:")), currentApp.Bandwidth)
 
 		return
 	}
@@ -129,6 +131,19 @@ func (cmd *Scale) Execute(c flags.FlagContext) {
 					"InstanceCount": instances,
 				}))
 		}
+	}
+
+	if c.String("bandwidth") != "" {
+		bandwidth, err := formatters.ToKilobits(c.String("bandwidth"))
+		if err != nil {
+			cmd.ui.Failed(T("Invalid bandwidth limit: {{.Bandwidth}}\n{{.ErrorDescription}}",
+				map[string]interface{}{
+					"Bandwidth":        c.String("bandwidth"),
+					"ErrorDescription": err,
+				}))
+		}
+		params.Bandwidth = &bandwidth
+		shouldRestart = true
 	}
 
 	if shouldRestart && !cmd.confirmRestart(c, currentApp.Name) {
