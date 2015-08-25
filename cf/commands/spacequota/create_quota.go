@@ -114,12 +114,12 @@ func (cmd *CreateSpaceQuota) Execute(context flags.FlagContext) {
 
 	instanceBandwidthLimit := context.String("instance-bandwidth")
 	var parsedBandwidth int64
-	var err error
+	var errBandwidth error
 	if instanceBandwidthLimit == "-1" || instanceBandwidthLimit == "" {
 		parsedBandwidth = -1
 	} else {
-		parsedBandwidth, err = formatters.ToKilobits(instanceBandwidthLimit)
-		if err != nil {
+		parsedBandwidth, errBandwidth = formatters.ToKilobits(instanceBandwidthLimit)
+		if errBandwidth != nil {
 			cmd.ui.Failed(T("Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}", map[string]interface{}{"BandwidthLimit": instanceBandwidthLimit, "Err": err}))
 		}
 	}

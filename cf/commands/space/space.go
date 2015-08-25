@@ -144,7 +144,7 @@ func (cmd *ShowSpace) Execute(c flags.FlagContext) {
 
 func (cmd *ShowSpace) quotaString(space models.Space) string {
 	var instance_memory string
-
+	var instance_bandwidth string
 	if space.SpaceQuotaGuid == "" {
 		return ""
 	}
