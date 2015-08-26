@@ -140,7 +140,11 @@ func (r *registry) CommandUsage(cmdName string) string {
 			switch f.GetValue().(type) {
 			case bool:
 			default:
-				output += "   -" + n + strings.Repeat(" ", 7+(l-len(n))) + f.String() + "\n"
+				if len(f.GetName()) == 1 {
+					output += "   -" + n + strings.Repeat(" ", 7+(l-len(n))) + f.String() + "\n"
+				} else { //for "bandwidth" flag, which is a string flag (non bool) but with len > 1
+					output += "   --" + n + strings.Repeat(" ", 6+(l-len(n))) + f.String() + "\n"
+				}
 			}
 		}
 
