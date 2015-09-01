@@ -77,6 +77,8 @@ var _ = Describe("quotas command", func() {
 						Name:                    "quota-name",
 						MemoryLimit:             1024,
 						InstanceMemoryLimit:     512,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  512,
 						RoutesLimit:             111,
 						ServicesLimit:           222,
 						NonBasicServicesAllowed: true,
@@ -86,6 +88,8 @@ var _ = Describe("quotas command", func() {
 						Name:                    "quota-non-basic-not-allowed",
 						MemoryLimit:             434,
 						InstanceMemoryLimit:     -1,
+						BandwidthLimit:          512,
+						InstanceBandwidthLimit:  -1,
 						RoutesLimit:             1,
 						ServicesLimit:           2,
 						NonBasicServicesAllowed: false,
@@ -99,9 +103,9 @@ var _ = Describe("quotas command", func() {
 				Expect(ui.Outputs).To(ContainSubstrings(
 					[]string{"Getting space quotas as", "my-user"},
 					[]string{"OK"},
-					[]string{"name", "total memory limit", "instance memory limit", "routes", "service instances", "paid service plans"},
-					[]string{"quota-name", "1G", "512M", "111", "222", "allowed"},
-					[]string{"quota-non-basic-not-allowed", "434M", "unlimited", "1", "2", "disallowed"},
+					[]string{"name", "total memory limit", "instance memory limit", "routes", "service instances", "total memory limit", "instance memory limit", "paid service plans"},
+					[]string{"quota-name", "1G", "512M", "111", "222", "1Mb", "512Kb", "allowed"},
+					[]string{"quota-non-basic-not-allowed", "434M", "unlimited", "1", "2", "512Kb", "unlimited", "disallowed"},
 				))
 			})
 			Context("when services are unlimited", func() {
@@ -111,6 +115,8 @@ var _ = Describe("quotas command", func() {
 							Name:                    "quota-non-basic-not-allowed",
 							MemoryLimit:             434,
 							InstanceMemoryLimit:     57,
+							BandwidthLimit:          123,
+							InstanceBandwidthLimit:  12,
 							RoutesLimit:             1,
 							ServicesLimit:           -1,
 							NonBasicServicesAllowed: false,
@@ -122,7 +128,7 @@ var _ = Describe("quotas command", func() {
 					Expect(quotaRepo.FindByOrgArgsForCall(0)).To(Equal("my-org-guid"))
 					Expect(ui.Outputs).To(ContainSubstrings(
 
-						[]string{"quota-non-basic-not-allowed", "434M", "57M ", "1", "unlimited", "disallowed"},
+						[]string{"quota-non-basic-not-allowed", "434M", "57M ", "1", "unlimited", "123Kb", "12Kb", "disallowed"},
 					))
 				})
 

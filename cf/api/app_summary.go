@@ -38,7 +38,7 @@ type ApplicationFromSummary struct {
 	SpaceGuid          string     `json:"space_guid"`
 	PackageUpdatedAt   *time.Time `json:"package_updated_at"`
 	Buildpack          string
-	Bandwidth          int64 `json:"json:"bandwith_in_kb"`
+	Bandwidth          int64 `json:"bandwidth_in_kb"`
 }
 
 func (resource ApplicationFromSummary) ToFields() (app models.ApplicationFields) {

@@ -33,6 +33,7 @@ var _ = Describe("ApplicationsRepository", func() {
 			Expect(app.Guid).To(Equal("app1-guid"))
 			Expect(app.Memory).To(Equal(int64(128)))
 			Expect(app.DiskQuota).To(Equal(int64(512)))
+			Expect(app.Bandwidth).To(Equal(int64(512)))
 			Expect(app.InstanceCount).To(Equal(1))
 			Expect(app.EnvironmentVars).To(Equal(map[string]interface{}{"foo": "bar", "baz": "boom"}))
 			Expect(app.Routes[0].Host).To(Equal("app1"))
@@ -108,7 +109,7 @@ var _ = Describe("ApplicationsRepository", func() {
 			request := testapi.NewCloudControllerTestRequest(testnet.TestRequest{
 				Method:   "POST",
 				Path:     "/v2/apps",
-				Matcher:  testnet.RequestBodyMatcher(`{"name":"my-cool-app","instances":3,"memory":2048,"disk_quota":512,"space_guid":"some-space-guid"}`),
+				Matcher:  testnet.RequestBodyMatcher(`{"name":"my-cool-app","instances":3,"memory":2048,"disk_quota":512,"bandwidth_in_kb":1024,"space_guid":"some-space-guid"}`),
 				Response: testnet.TestResponse{Status: http.StatusCreated, Body: createApplicationResponse},
 			})
 
@@ -261,6 +262,7 @@ var _ = Describe("ApplicationsRepository", func() {
 			app.SpaceGuid = "some-space-guid"
 			app.State = "started"
 			app.DiskQuota = 512
+			app.Bandwidth = 1024
 			Expect(app.EnvironmentVars).To(BeNil())
 
 			updatedApp, apiErr := repo.Update(app.Guid, app.ToParams())
@@ -346,6 +348,7 @@ var appModelResponse = testnet.TestResponse{
         "memory": 128,
         "instances": 1,
         "disk_quota": 512,
+        "bandwidth_in_kb": 512,
         "state": "STOPPED",
         "stack": {
 			"metadata": {
@@ -395,6 +398,7 @@ var singleAppResponse = testnet.TestResponse{
         "memory": 128,
         "instances": 1,
         "disk_quota": 512,
+        "bandwidth_in_kb": 512,
         "state": "STOPPED",
         "stack": {
 			"metadata": {
@@ -452,6 +456,7 @@ var createApplicationRequest = testapi.NewCloudControllerTestRequest(testnet.Tes
 		"buildpack":"buildpack-url",
 		"memory":2048,
 		"disk_quota": 512,
+		"bandwidth_in_kb": 1024,
 		"space_guid":"some-space-guid",
 		"stack_guid":"some-stack-guid",
 		"command":"some-command"
@@ -469,6 +474,7 @@ func defaultAppParams() models.AppParams {
 	command := "some-command"
 	memory := int64(2048)
 	diskQuota := int64(512)
+	bandwidth := int64(1024)
 	instanceCount := 3
 
 	return models.AppParams{
@@ -479,6 +485,7 @@ func defaultAppParams() models.AppParams {
 		Command:       &command,
 		Memory:        &memory,
 		DiskQuota:     &diskQuota,
+		Bandwidth:     &bandwidth,
 		InstanceCount: &instanceCount,
 	}
 }
@@ -498,7 +505,7 @@ var updateApplicationResponse = `
 var updateApplicationRequest = testapi.NewCloudControllerTestRequest(testnet.TestRequest{
 	Method:  "PUT",
 	Path:    "/v2/apps/my-app-guid?inline-relations-depth=1",
-	Matcher: testnet.RequestBodyMatcher(`{"name":"my-cool-app","instances":3,"buildpack":"buildpack-url","memory":2048,"disk_quota":512,"space_guid":"some-space-guid","state":"STARTED","stack_guid":"some-stack-guid","command":"some-command"}`),
+	Matcher: testnet.RequestBodyMatcher(`{"name":"my-cool-app","instances":3,"buildpack":"buildpack-url","memory":2048,"disk_quota":512,"bandwidth_in_kb":1024,"space_guid":"some-space-guid","state":"STARTED","stack_guid":"some-stack-guid","command":"some-command"}`),
 	Response: testnet.TestResponse{
 		Status: http.StatusOK,
 		Body:   updateApplicationResponse},

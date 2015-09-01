@@ -31,7 +31,7 @@ func (cmd *updateQuota) MetaData() command_registry.CommandMetadata {
 	fs["n"] = &cliFlags.StringFlag{Name: "n", Usage: T("New name")}
 	fs["r"] = &cliFlags.IntFlag{Name: "r", Usage: T("Total number of routes")}
 	fs["s"] = &cliFlags.IntFlag{Name: "s", Usage: T("Total number of service instances")}
-	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.")}
+	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M)")}
 	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Total amount of bandwidth (e.g. 1024K, 1M, 10M)")}
 
 	return command_registry.CommandMetadata{

@@ -125,7 +125,9 @@ var _ = Describe("Organization Repository", func() {
 		"quota_definition": {
 		  "entity": {
 			"name": "not-your-average-quota",
-			"memory_limit": 128
+			"memory_limit": 128,
+			"bandwidth_in_kb_limit":1024,
+			"instance_bandwidth_in_kb_limit":128
 		  }
 		},
 		"spaces": [{
@@ -158,6 +160,8 @@ var _ = Describe("Organization Repository", func() {
 			Expect(org.Guid).To(Equal(existingOrg.Guid))
 			Expect(org.QuotaDefinition.Name).To(Equal("not-your-average-quota"))
 			Expect(org.QuotaDefinition.MemoryLimit).To(Equal(int64(128)))
+			Expect(org.QuotaDefinition.BandwidthLimit).To(Equal(int64(1024)))
+			Expect(org.QuotaDefinition.InstanceBandwidthLimit).To(Equal(int64(128)))
 			Expect(len(org.Spaces)).To(Equal(1))
 			Expect(org.Spaces[0].Name).To(Equal("Space1"))
 			Expect(org.Spaces[0].Guid).To(Equal("space1-guid"))

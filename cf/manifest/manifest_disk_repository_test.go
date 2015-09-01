@@ -165,13 +165,16 @@ var _ = Describe("ManifestDiskRepository", func() {
 		Expect(*applications[0].Name).To(Equal("blue"))
 		Expect(*applications[0].InstanceCount).To(Equal(1))
 		Expect(*applications[0].Memory).To(Equal(int64(256)))
+		Expect(*applications[0].Bandwidth).To(Equal(int64(1024)))
 
 		Expect(*applications[1].Name).To(Equal("green"))
 		Expect(*applications[1].InstanceCount).To(Equal(1))
 		Expect(*applications[1].Memory).To(Equal(int64(256)))
+		Expect(*applications[0].Bandwidth).To(Equal(int64(1024)))
 
 		Expect(*applications[2].Name).To(Equal("big-blue"))
 		Expect(*applications[2].InstanceCount).To(Equal(3))
 		Expect(*applications[2].Memory).To(Equal(int64(256)))
+		Expect(*applications[0].Bandwidth).To(Equal(int64(1024)))
 	})
 })

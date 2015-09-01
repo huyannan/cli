@@ -83,6 +83,8 @@ var _ = Describe("set-space-quota command", func() {
 						Guid:                    "quota-guid",
 						MemoryLimit:             1024,
 						InstanceMemoryLimit:     512,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  512,
 						RoutesLimit:             111,
 						ServicesLimit:           222,
 						NonBasicServicesAllowed: true,

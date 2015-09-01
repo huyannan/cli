@@ -91,14 +91,15 @@ var _ = Describe("app Command", func() {
 		BeforeEach(func() {
 			app = makeAppWithRoute("my-app")
 			appInstance := models.AppInstanceFields{
-				State:     models.InstanceRunning,
-				Since:     testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
-				Details:   "normal",
-				CpuUsage:  1.0,
-				DiskQuota: 1 * formatters.GIGABYTE,
-				DiskUsage: 32 * formatters.MEGABYTE,
-				MemQuota:  64 * formatters.MEGABYTE,
-				MemUsage:  13 * formatters.MEGABYTE,
+				State:          models.InstanceRunning,
+				Since:          testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
+				Details:        "normal",
+				CpuUsage:       1.0,
+				DiskQuota:      1 * formatters.GIGABYTE,
+				DiskUsage:      32 * formatters.MEGABYTE,
+				MemQuota:       64 * formatters.MEGABYTE,
+				MemUsage:       13 * formatters.MEGABYTE,
+				BandwidthQuota: 128 * formatters.KILOBIT,
 			}
 
 			appInstance2 := models.AppInstanceFields{
@@ -130,6 +131,7 @@ var _ = Describe("app Command", func() {
 			Ω(pluginAppModel.EnvironmentVars).To(Equal(map[string]interface{}{"test": 123}))
 			Ω(pluginAppModel.InstanceCount).To(Equal(2))
 			Ω(pluginAppModel.Memory).To(Equal(int64(256)))
+			Ω(pluginAppModel.Bandwidth).To(Equal(int64(512)))
 			Ω(pluginAppModel.RunningInstances).To(Equal(2))
 			Ω(pluginAppModel.HealthCheckTimeout).To(Equal(100))
 			Ω(pluginAppModel.SpaceGuid).To(Equal("guids_in_spaaace"))
@@ -153,6 +155,7 @@ var _ = Describe("app Command", func() {
 			Ω(pluginAppModel.Instances[0].DiskUsage).To(Equal(int64(32 * formatters.MEGABYTE)))
 			Ω(pluginAppModel.Instances[0].MemQuota).To(Equal(int64(64 * formatters.MEGABYTE)))
 			Ω(pluginAppModel.Instances[0].MemUsage).To(Equal(int64(13 * formatters.MEGABYTE)))
+			Ω(pluginAppModel.Instances[0].BandwidthQuota).To(Equal(int64(128 * formatters.KILOBIT)))
 
 			Ω(pluginAppModel.Routes[1].Host).To(Equal("my-app"))
 		})
@@ -162,13 +165,14 @@ var _ = Describe("app Command", func() {
 		BeforeEach(func() {
 			app = makeAppWithRoute("my-app")
 			appInstance := models.AppInstanceFields{
-				State:     models.InstanceRunning,
-				Since:     testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
-				CpuUsage:  1.0,
-				DiskQuota: 1 * formatters.GIGABYTE,
-				DiskUsage: 32 * formatters.MEGABYTE,
-				MemQuota:  64 * formatters.MEGABYTE,
-				MemUsage:  13 * formatters.BYTE,
+				State:          models.InstanceRunning,
+				Since:          testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
+				CpuUsage:       1.0,
+				DiskQuota:      1 * formatters.GIGABYTE,
+				DiskUsage:      32 * formatters.MEGABYTE,
+				MemQuota:       64 * formatters.MEGABYTE,
+				MemUsage:       13 * formatters.BYTE,
+				BandwidthQuota: 128 * formatters.KILOBIT,
 			}
 
 			appInstance2 := models.AppInstanceFields{
@@ -321,6 +325,7 @@ var _ = Describe("app Command", func() {
 			application.InstanceCount = 2
 			application.RunningInstances = 0
 			application.Memory = 256
+			application.Bandwidth = 512
 			now := time.Now()
 			application.PackageUpdatedAt = &now
 
@@ -368,13 +373,14 @@ var _ = Describe("app Command", func() {
 			app := makeAppWithRoute("my-app")
 			app.RunningInstances = -1
 			appInstance := models.AppInstanceFields{
-				State:     models.InstanceRunning,
-				Since:     testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
-				CpuUsage:  5.0,
-				DiskQuota: 4 * formatters.GIGABYTE,
-				DiskUsage: 3 * formatters.GIGABYTE,
-				MemQuota:  2 * formatters.GIGABYTE,
-				MemUsage:  1 * formatters.GIGABYTE,
+				State:          models.InstanceRunning,
+				Since:          testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
+				CpuUsage:       5.0,
+				DiskQuota:      4 * formatters.GIGABYTE,
+				DiskUsage:      3 * formatters.GIGABYTE,
+				MemQuota:       2 * formatters.GIGABYTE,
+				MemUsage:       1 * formatters.GIGABYTE,
+				BandwidthQuota: 1 * formatters.MEGABIT,
 			}
 
 			appInstance2 := models.AppInstanceFields{
@@ -446,6 +452,7 @@ func makeAppWithRoute(appName string) models.Application {
 	application.InstanceCount = 2
 	application.RunningInstances = 2
 	application.Memory = 256
+	application.Bandwidth = 512
 
 	t := time.Date(2009, time.November, 10, 15, 0, 0, 0, time.UTC)
 	application.PackageUpdatedAt = &t

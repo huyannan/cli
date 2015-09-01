@@ -63,11 +63,12 @@ var _ = Describe("app Command", func() {
 	Describe("updating quota fields", func() {
 		BeforeEach(func() {
 			quota = models.QuotaFields{
-				Guid:          "quota-guid",
-				Name:          "quota-name",
-				MemoryLimit:   1024,
-				RoutesLimit:   111,
-				ServicesLimit: 222,
+				Guid:           "quota-guid",
+				Name:           "quota-name",
+				MemoryLimit:    1024,
+				BandwidthLimit: 1024,
+				RoutesLimit:    111,
+				ServicesLimit:  222,
 			}
 		})
 
@@ -105,6 +106,42 @@ var _ = Describe("app Command", func() {
 
 			It("fails with usage when the value cannot be parsed", func() {
 				runCommand("-m", "blasé", "le-tired")
+				Expect(ui.Outputs).To(ContainSubstrings(
+					[]string{"Incorrect Usage"},
+				))
+			})
+		})
+
+		Context("when the --instance-bandwidth flag is provided", func() {
+			It("updates the instance bandwidth limit", func() {
+				runCommand("--instance-bandwidth", "512Kb", "quota-name")
+				Expect(quotaRepo.UpdateArgsForCall(0).Name).To(Equal("quota-name"))
+				Expect(quotaRepo.UpdateArgsForCall(0).InstanceBandwidthLimit).To(Equal(int64(512)))
+			})
+
+			It("totally accepts -1 as a value because it means unlimited", func() {
+				runCommand("--instance-bandwidth", "-1", "quota-name")
+				Expect(quotaRepo.UpdateArgsForCall(0).Name).To(Equal("quota-name"))
+				Expect(quotaRepo.UpdateArgsForCall(0).InstanceBandwidthLimit).To(Equal(int64(-1)))
+			})
+
+			It("fails with usage when the value cannot be parsed", func() {
+				runCommand("--instance-bandwidth", "blasé", "le-tired")
+				Expect(ui.Outputs).To(ContainSubstrings(
+					[]string{"Incorrect Usage"},
+				))
+			})
+		})
+
+		Context("when the --bandwidth flag is provided", func() {
+			It("updates the bandwidth limit", func() {
+				runCommand("---bandwidth", "2Mb", "quota-name")
+				Expect(quotaRepo.UpdateArgsForCall(0).Name).To(Equal("quota-name"))
+				Expect(quotaRepo.UpdateArgsForCall(0).BandwidthLimit).To(Equal(int64(2048)))
+			})
+
+			It("fails with usage when the value cannot be parsed", func() {
+				runCommand("--bandwidth", "blasé", "le-tired")
 				Expect(ui.Outputs).To(ContainSubstrings(
 					[]string{"Incorrect Usage"},
 				))

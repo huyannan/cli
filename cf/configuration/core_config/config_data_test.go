@@ -29,7 +29,9 @@ var exampleJSON = `
 			"instance_memory_limit":0,
 			"total_routes":0,
 			"total_services":0,
-			"non_basic_services_allowed": false
+			"non_basic_services_allowed": false,
+			"bandwidth_in_kb_limit":0,
+			"instance_bandwidth_in_kb_limit":0
 		}
 	},
 	"SpaceFields": {

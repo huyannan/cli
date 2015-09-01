@@ -575,6 +575,11 @@
       "modified": true
    },
    {
+      "id": "Bit quantity must be an integer with a unit of measurement like K, Kb, M, Mb, G, or Gb",
+      "translation": "比特数量，必须是以K，Kb，M，Mb，G或Gb为单位的正整数",
+      "modified": false
+   },
+   {
       "id": "CF_NAME add-plugin-repo [REPO_NAME] [URL]\n\nEXAMPLE:\n   cf add-plugin-repo PrivateRepo http://myprivaterepo.com/repo/\n",
       "translation": "CF_NAME add-plugin-repo [REPO_NAME] [URL]\n\nEXAMPLE:\n   cf add-plugin-repo PrivateRepo http://myprivaterepo.com/repo/\n",
       "modified": false
@@ -650,8 +655,8 @@
       "modified": false
    },
    {
-      "id": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
-      "translation": "CF_NAME create-quota QUOTA [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
+      "id": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
+      "translation": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
       "modified": true
    },
    {
@@ -695,8 +700,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
-      "translation": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
+      "id": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
+      "translation": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
       "modified": false
    },
    {
@@ -970,8 +975,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [-f]",
-      "translation": "CF_NAME scale 应用程序 [-i 实例数] [-k 磁盘] [-m 内存] [-f]",
+      "id": "CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [--bandwidth BANDWIDTH] [-f]",
+      "translation": "CF_NAME scale 应用程序 [-i 实例数] [-k 磁盘] [-m 内存] [--bandwidth 带宽] [-f]",
       "modified": true
    },
    {
@@ -1155,8 +1160,8 @@
       "modified": false
    },
    {
-      "id": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
-      "translation": "CF_NAME update-quota QUOTA [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "id": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "translation": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
       "modified": true
    },
    {
@@ -1180,8 +1185,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
-      "translation": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--allow-non-basic-services | --disallow-non-basic-services]",
+      "id": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "translation": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
       "modified": true
    },
    {
@@ -1245,8 +1250,8 @@
       "modified": false
    },
    {
-      "id": "Change or view the instance count, disk space limit, and memory limit for an app",
-      "translation": "更改或查看应用程序的实例个数，磁盘空间配额和内存配额",
+      "id": "Change or view the instance count, disk space limit, memory limit, and bandwidth limit for an app",
+      "translation": "更改或查看应用程序的实例个数，磁盘空间配额，内存配额和带宽配额",
       "modified": false
    },
    {
@@ -2840,6 +2845,11 @@
       "modified": false
    },
    {
+      "id": "Instance Bandwidth",
+      "translation": "Instance Bandwidth",
+      "modified": false
+   },
+   {
       "id": "Instance must be a non-negative integer",
       "translation": "Instance must be a non-negative integer",
       "modified": false
@@ -2905,6 +2915,11 @@
       "modified": false
    },
    {
+      "id": "Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "translation": "Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "modified": false
+   },
+   {
       "id": "Invalid instance: {{.Instance}}\nInstance must be a positive integer",
       "translation": "Invalid instance: {{.Instance}}\nInstance must be a positive integer",
       "modified": false
@@ -2938,7 +2953,18 @@
       "id": "Invalid memory limit: {{.Memory}}\n{{.ErrorDescription}}",
       "translation": "无效的内存配额: {{.Memory}}\n{{.ErrorDescription}}",
       "modified": false
+   },   
+   {
+      "id": "Invalid bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "translation": "无效的带宽配额: {{.BandwidthLimit}}\n{{.Err}}",
+      "modified": false
    },
+   {
+      "id": "Invalid bandwidth limit: {{.Bandwidth}}\n{{.ErrorDescription}}",
+      "translation": "无效的带宽配额: {{.Bandwidth}}\n{{.ErrorDescription}}",
+      "modified": false
+   },
+
    {
       "id": "Invalid timeout param: {{.Timeout}}\n{{.Err}}",
       "translation": "无效的超时参数设定: {{.Timeout}}\n{{.Err}}",
@@ -3155,6 +3181,21 @@
       "modified": true
    },
    {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M)",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M)",
+      "modified": false
+   },
+   {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.",
+      "modified": false
+   },
+   {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount. (Default: unlimited)",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount. (Default: unlimited)",
+      "modified": false
+   },
+   {
       "id": "Maximum time (in seconds) for CLI to wait for application start, other server side timeouts may apply",
       "translation": "在数秒内启动超时",
       "modified": true
@@ -3162,6 +3203,11 @@
    {
       "id": "Memory limit (e.g. 256M, 1024M, 1G)",
       "translation": "内存配额（例如256M，1024M，1G）",
+      "modified": false
+   },
+   {
+      "id": "Bandwidth limit (e.g. 1024K, 1M, 10M)",
+      "translation": "Bandwidth limit (e.g. 1024K, 1M, 10M)",
       "modified": false
    },
    {
@@ -4500,8 +4546,18 @@
       "modified": true
    },
    {
+      "id": "Total Bandwidth",
+      "translation": "Total Bandwidth",
+      "modified": false
+   },
+   {
       "id": "Total amount of memory (e.g. 1024M, 1G, 10G)",
       "translation": "Total amount of memory (e.g. 1024M, 1G, 10G)",
+      "modified": false
+   },
+   {
+      "id": "Total amount of bandwidth (e.g. 1024K, 1M, 10M)",
+      "translation": "Total amount of bandwidth (e.g. 1024M, 1G, 10G)",
       "modified": false
    },
    {
@@ -5075,6 +5131,11 @@
       "modified": false
    },
    {
+      "id": "instance bandwidth limit",
+      "translation": "instance bandwidth limit",
+      "modified": false
+   },   
+   {
       "id": "instance: {{.InstanceIndex}}, reason: {{.ExitDescription}}, exit_status: {{.ExitStatus}}",
       "translation": "实例: {{.InstanceIndex}}, 原因: {{.ExitDescription}}, 退出状态/返回码: {{.ExitStatus}}",
       "modified": false
@@ -5145,8 +5206,18 @@
       "modified": false
    },
    {
+      "id": "bandwidth",
+      "translation": "bandwidth",
+      "modified": false
+   },   
+   {
       "id": "memory:",
       "translation": "内存:",
+      "modified": false
+   },
+   {
+      "id": "bandwidth:",
+      "translation": "bandwidth:",
       "modified": false
    },
    {
@@ -5365,6 +5436,11 @@
       "modified": true
    },
    {
+      "id": "total bandwidth limit",
+      "translation": "total bandwidth limit",
+      "modified": false
+   },   
+   {
       "id": "unknown authority",
       "translation": "未知的认证",
       "modified": false
@@ -5515,9 +5591,9 @@
       "modified": false
    },
    {
-      "id": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, paid services {{.NonBasicServicesAllowed}})",
-      "translation": "{{.QuotaName}} ({{.MemoryLimit}}M 内存限制, {{.RoutesLimit}} 路由, {{.ServicesLimit}} 服务, 有偿服务 {{.NonBasicServicesAllowed}})",
-      "modified": true
+      "id": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, {{.BandwidthLimit}}Kb bandwidth limit, {{.InstanceBandwidthLimit}} instance bandwidth limit, paid services {{.NonBasicServicesAllowed}})",
+      "translation": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, {{.BandwidthLimit}}Kb bandwidth limit, {{.InstanceBandwidthLimit}} instance bandwidth limit, paid services {{.NonBasicServicesAllowed}})",
+      "modified": false
    },
    {
       "id": "{{.RunningCount}} of {{.TotalCount}} instances running",

@@ -21,6 +21,12 @@ type FakeAppManifest struct {
 		arg1 string
 		arg2 int64
 	}
+	BandwidthStub        func(string, int64)
+	bandwidthMutex       sync.RWMutex
+	bandwidthArgsForCall []struct {
+		arg1 string
+		arg2 int64
+	}
 	ServiceStub        func(string, string)
 	serviceMutex       sync.RWMutex
 	serviceArgsForCall []struct {
@@ -124,6 +130,30 @@ func (fake *FakeAppManifest) MemoryArgsForCall(i int) (string, int64) {
 	fake.memoryMutex.RLock()
 	defer fake.memoryMutex.RUnlock()
 	return fake.memoryArgsForCall[i].arg1, fake.memoryArgsForCall[i].arg2
+}
+
+func (fake *FakeAppManifest) Bandwidth(arg1 string, arg2 int64) {
+	fake.bandwidthMutex.Lock()
+	fake.bandwidthArgsForCall = append(fake.bandwidthArgsForCall, struct {
+		arg1 string
+		arg2 int64
+	}{arg1, arg2})
+	fake.bandwidthMutex.Unlock()
+	if fake.BandwidthStub != nil {
+		fake.BandwidthStub(arg1, arg2)
+	}
+}
+
+func (fake *FakeAppManifest) BandwidthCallCount() int {
+	fake.bandwidthMutex.RLock()
+	defer fake.bandwidthMutex.RUnlock()
+	return len(fake.bandwidthArgsForCall)
+}
+
+func (fake *FakeAppManifest) BandwidthArgsForCall(i int) (string, int64) {
+	fake.bandwidthMutex.RLock()
+	defer fake.bandwidthMutex.RUnlock()
+	return fake.bandwidthArgsForCall[i].arg1, fake.bandwidthArgsForCall[i].arg2
 }
 
 func (fake *FakeAppManifest) Service(arg1 string, arg2 string) {

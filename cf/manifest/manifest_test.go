@@ -21,6 +21,7 @@ var _ = Describe("Manifests", func() {
 		m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
 			"instances": "3",
 			"memory":    "512M",
+			"bandwidth": "1024K",
 			"applications": []interface{}{
 				map[interface{}]interface{}{
 					"name":     "bitcoin-miner",
@@ -34,6 +35,7 @@ var _ = Describe("Manifests", func() {
 
 		Expect(*apps[0].InstanceCount).To(Equal(3))
 		Expect(*apps[0].Memory).To(Equal(int64(512)))
+		Expect(*apps[0].Bandwidth).To(Equal(int64(1024)))
 		Expect(apps[0].NoRoute).To(BeTrue())
 	})
 
@@ -42,6 +44,7 @@ var _ = Describe("Manifests", func() {
 			m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
 				"instances": "3",
 				"memory":    "512M",
+				"bandwidth": "1024K",
 			}))
 
 			apps, err := m.Applications()
@@ -50,6 +53,7 @@ var _ = Describe("Manifests", func() {
 			Expect(len(apps)).To(Equal(1))
 			Expect(*apps[0].InstanceCount).To(Equal(3))
 			Expect(*apps[0].Memory).To(Equal(int64(512)))
+			Expect(*apps[0].Bandwidth).To(Equal(int64(1024)))
 		})
 	})
 
@@ -69,6 +73,22 @@ var _ = Describe("Manifests", func() {
 		Expect(err.Error()).To(ContainSubstring("Invalid value for 'memory': 512"))
 	})
 
+	It("returns an error when the bandwidth limit doesn't have a unit", func() {
+		m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
+			"instances": "3",
+			"bandwidth": "1024",
+			"applications": []interface{}{
+				map[interface{}]interface{}{
+					"name": "bitcoin-miner",
+				},
+			},
+		}))
+
+		_, err := m.Applications()
+		Expect(err).To(HaveOccurred())
+		Expect(err.Error()).To(ContainSubstring("Invalid value for 'bandwidth': 1024"))
+	})
+
 	//candiedyaml returns an integer value when no unit is provided
 	It("returns an error when the memory limit is a non-string", func() {
 		m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
@@ -84,6 +104,22 @@ var _ = Describe("Manifests", func() {
 		_, err := m.Applications()
 		Expect(err).To(HaveOccurred())
 		Expect(err.Error()).To(ContainSubstring("Invalid value for 'memory': 128"))
+	})
+
+	It("returns an error when the bandwidth limit is a non-string", func() {
+		m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
+			"instances": "3",
+			"bandwidth": 256,
+			"applications": []interface{}{
+				map[interface{}]interface{}{
+					"name": "bitcoin-miner",
+				},
+			},
+		}))
+
+		_, err := m.Applications()
+		Expect(err).To(HaveOccurred())
+		Expect(err.Error()).To(ContainSubstring("Invalid value for 'bandwidth': 256"))
 	})
 
 	It("sets applications' health check timeouts", func() {
@@ -198,6 +234,7 @@ var _ = Describe("Manifests", func() {
 					"path":         nil,
 					"stack":        nil,
 					"memory":       nil,
+					"bandwidth":    nil,
 					"instances":    nil,
 					"timeout":      nil,
 					"no-route":     nil,
@@ -213,7 +250,7 @@ var _ = Describe("Manifests", func() {
 		Expect(err).To(HaveOccurred())
 		errorSlice := strings.Split(err.Error(), "\n")
 		manifestKeys := []string{"disk_quota", "domain", "host", "name", "path", "stack",
-			"memory", "instances", "timeout", "no-route", "no-hostname", "services", "env", "random-route"}
+			"memory", "bandwidth", "instances", "timeout", "no-route", "no-hostname", "services", "env", "random-route"}
 
 		for _, key := range manifestKeys {
 			Expect(errorSlice).To(ContainSubstrings([]string{key, "not be null"}))
@@ -251,6 +288,7 @@ var _ = Describe("Manifests", func() {
 					"name":         "my-app-name",
 					"stack":        "my-stack",
 					"memory":       "256M",
+					"bandwidth":    "1024Kb",
 					"instances":    1,
 					"timeout":      11,
 					"no-route":     true,
@@ -271,6 +309,7 @@ var _ = Describe("Manifests", func() {
 		Expect(*apps[0].Name).To(Equal("my-app-name"))
 		Expect(*apps[0].StackName).To(Equal("my-stack"))
 		Expect(*apps[0].Memory).To(Equal(int64(256)))
+		Expect(*apps[0].Bandwidth).To(Equal(int64(1024)))
 		Expect(*apps[0].InstanceCount).To(Equal(1))
 		Expect(*apps[0].HealthCheckTimeout).To(Equal(11))
 		Expect(apps[0].NoRoute).To(BeTrue())
@@ -387,7 +426,8 @@ var _ = Describe("Manifests", func() {
 
 	It("can build the applications multiple times", func() {
 		m := NewManifest("/some/path/manifest.yml", generic.NewMap(map[interface{}]interface{}{
-			"memory": "254m",
+			"memory":    "254m",
+			"bandwidth": "123k",
 			"applications": []interface{}{
 				map[interface{}]interface{}{
 					"name": "bitcoin-miner",

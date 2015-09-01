@@ -20,6 +20,6 @@ type QuotaFields struct {
 	RoutesLimit             int    `json:"total_routes"`
 	ServicesLimit           int    `json:"total_services"`
 	NonBasicServicesAllowed bool   `json:"non_basic_services_allowed"`
-	BandwidthLimit          int64  `json:"bandwith_in_kb_limit"`          // in Kilobits
-	InstanceBandwidthLimit  int64  `json:"instance_bandwith_in_kb_limit"` // in Kilobits
+	BandwidthLimit          int64  `json:"bandwidth_in_kb_limit"`          // in Kilobits
+	InstanceBandwidthLimit  int64  `json:"instance_bandwidth_in_kb_limit"` // in Kilobits
 }

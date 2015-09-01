@@ -59,6 +59,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 				InstanceMemoryLimit:     -1,
 				RoutesLimit:             123,
 				ServicesLimit:           321,
+				BandwidthLimit:          1024,
+				InstanceBandwidthLimit:  -1,
 				NonBasicServicesAllowed: true,
 			}))
 		})
@@ -80,6 +82,7 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 			Expect(quotas[0].MemoryLimit).To(Equal(int64(1024)))
 			Expect(quotas[0].RoutesLimit).To(Equal(123))
 			Expect(quotas[0].ServicesLimit).To(Equal(321))
+			Expect(quotas[0].BandwidthLimit).To(Equal(int64(1024)))
 
 			Expect(quotas[1].Guid).To(Equal("my-quota-guid2"))
 			Expect(quotas[2].Guid).To(Equal("my-quota-guid3"))
@@ -114,17 +117,20 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 					"total_services": 1,
 					"total_routes": 12,
 					"memory_limit": 123,
-					"instance_memory_limit": 0
+					"instance_memory_limit": 0,
+					"bandwidth_in_kb_limit": 234,
+					"instance_bandwidth_in_kb_limit": 0
 				}`),
 				Response: testnet.TestResponse{Status: http.StatusCreated},
 			})
 			setupTestServer(req)
 
 			quota := models.QuotaFields{
-				Name:          "not-so-strict",
-				ServicesLimit: 1,
-				RoutesLimit:   12,
-				MemoryLimit:   123,
+				Name:           "not-so-strict",
+				ServicesLimit:  1,
+				RoutesLimit:    12,
+				MemoryLimit:    123,
+				BandwidthLimit: 234,
 			}
 			err := repo.Create(quota)
 			Expect(err).NotTo(HaveOccurred())
@@ -144,16 +150,19 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 					"total_services": 1,
 					"total_routes": 12,
 					"memory_limit": 123,
-					"instance_memory_limit": 0
+					"instance_memory_limit": 0,
+					"bandwidth_in_kb_limit": 234,
+					"instance_bandwidth_in_kb_limit": 0
 				}`),
 			}))
 
 			quota := models.QuotaFields{
-				Guid:          "my-quota-guid",
-				Name:          "amazing-quota",
-				ServicesLimit: 1,
-				RoutesLimit:   12,
-				MemoryLimit:   123,
+				Guid:           "my-quota-guid",
+				Name:           "amazing-quota",
+				ServicesLimit:  1,
+				RoutesLimit:    12,
+				MemoryLimit:    123,
+				BandwidthLimit: 234,
 			}
 
 			err := repo.Update(quota)
@@ -194,6 +203,8 @@ var firstQuotaRequest = testapi.NewCloudControllerTestRequest(testnet.TestReques
           "instance_memory_limit": -1,
 			  	"total_routes": 123,
 			  	"total_services": 321,
+			  	"bandwidth_in_kb_limit": 1024,
+          "instance_bandwidth_in_kb_limit": -1,
 			  	"non_basic_services_allowed": true
 			  }
 			}
@@ -210,11 +221,11 @@ var secondQuotaRequest = testapi.NewCloudControllerTestRequest(testnet.TestReque
 		"resources": [
 			{
 			  "metadata": { "guid": "my-quota-guid2" },
-			  "entity": { "name": "my-remote-quota2", "memory_limit": 1024 }
+			  "entity": { "name": "my-remote-quota2", "memory_limit": 1024, "bandwidth_in_kb_limit": 1024 }
 			},
 			{
 			  "metadata": { "guid": "my-quota-guid3" },
-			  "entity": { "name": "my-remote-quota3", "memory_limit": 1024 }
+			  "entity": { "name": "my-remote-quota3", "memory_limit": 1024, "bandwidth_in_kb_limit": 1024 }
 			}
 		]}`,
 	},

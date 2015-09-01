@@ -54,6 +54,8 @@ var _ = Describe("generate_manifest", func() {
 	It("creates entry under the given app name", func() {
 		m.Memory("app1", 128)
 		m.Memory("app2", 64)
+		m.Bandwidth("app1", 1024)
+		m.Bandwidth("app2", 512)
 		m.Save()
 
 		//outputs.ContainSubstring assert orders
@@ -64,9 +66,11 @@ var _ = Describe("generate_manifest", func() {
 
 		Ω(cmdOutput.ContainsSubstring("- name: app1")).To(BeTrue())
 		Ω(cmdOutput.ContainsSubstring("  memory: 128M")).To(BeTrue())
+		Ω(cmdOutput.ContainsSubstring("  bandwidth: 1024Kb")).To(BeTrue())
 
 		Ω(cmdOutput.ContainsSubstring("- name: app2")).To(BeTrue())
 		Ω(cmdOutput.ContainsSubstring("  memory: 64M")).To(BeTrue())
+		Ω(cmdOutput.ContainsSubstring("  bandwidth: 512Kb")).To(BeTrue())
 	})
 
 	It("prefixes each service with '-'", func() {
@@ -87,6 +91,7 @@ var _ = Describe("generate_manifest", func() {
 
 	It("generates a manifest containing all the attributes", func() {
 		m.Memory("app1", 128)
+		m.Bandwidth("app1", 1024)
 		m.StartCommand("app1", "run main.go")
 		m.Service("app1", "service1")
 		m.EnvironmentVars("app1", "foo", "boo")
@@ -100,6 +105,7 @@ var _ = Describe("generate_manifest", func() {
 		Ω(getYamlContent("./output.yml")).To(ContainSubstrings(
 			[]string{"- name: app1"},
 			[]string{"  memory: 128M"},
+			[]string{"  bandwidth: 1024Kb"},
 			[]string{"  command: run main.go"},
 			[]string{"  services:"},
 			[]string{"  - service1"},
@@ -116,6 +122,7 @@ var _ = Describe("generate_manifest", func() {
 
 		It("generates a manifest containing two hosts two domains", func() {
 			m.Memory("app1", 128)
+			m.Bandwidth("app1", 1024)
 			m.StartCommand("app1", "run main.go")
 			m.Service("app1", "service1")
 			m.EnvironmentVars("app1", "foo", "boo")
@@ -132,6 +139,7 @@ var _ = Describe("generate_manifest", func() {
 			Ω(getYamlContent("./output.yml")).To(ContainSubstrings(
 				[]string{"- name: app1"},
 				[]string{"  memory: 128M"},
+				[]string{"  bandwidth: 1024Kb"},
 				[]string{"  command: run main.go"},
 				[]string{"  services:"},
 				[]string{"  - service1"},
@@ -154,6 +162,7 @@ var _ = Describe("generate_manifest", func() {
 
 		It("generates a manifest containing two hosts one domain", func() {
 			m.Memory("app1", 128)
+			m.Bandwidth("app1", 1024)
 			m.StartCommand("app1", "run main.go")
 			m.Service("app1", "service1")
 			m.EnvironmentVars("app1", "foo", "boo")
@@ -168,6 +177,7 @@ var _ = Describe("generate_manifest", func() {
 			Ω(getYamlContent("./output.yml")).To(ContainSubstrings(
 				[]string{"- name: app1"},
 				[]string{"  memory: 128M"},
+				[]string{"  bandwidth: 1024Kb"},
 				[]string{"  command: run main.go"},
 				[]string{"  services:"},
 				[]string{"  - service1"},
@@ -188,6 +198,7 @@ var _ = Describe("generate_manifest", func() {
 
 		It("generates a manifest containing one host two domains", func() {
 			m.Memory("app1", 128)
+			m.Bandwidth("app1", 1024)
 			m.StartCommand("app1", "run main.go")
 			m.Service("app1", "service1")
 			m.EnvironmentVars("app1", "foo", "boo")
@@ -202,6 +213,7 @@ var _ = Describe("generate_manifest", func() {
 			Ω(getYamlContent("./output.yml")).To(ContainSubstrings(
 				[]string{"- name: app1"},
 				[]string{"  memory: 128M"},
+				[]string{"  bandwidth: 1024Kb"},
 				[]string{"  command: run main.go"},
 				[]string{"  services:"},
 				[]string{"  - service1"},

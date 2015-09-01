@@ -55,7 +55,7 @@ type ApplicationEntity struct {
 	PackageState         *string                 `json:"package_state,omitempty"`
 	StagingFailedReason  *string                 `json:"staging_failed_reason,omitempty"`
 	Diego                bool                    `json:"diego,omitempty"`
-	Bandwidth            *int64                  `json:"bandwith_in_kb,omitempty"`
+	Bandwidth            *int64                  `json:"bandwidth_in_kb,omitempty"`
 }
 
 func (resource AppRouteResource) ToFields() (route models.RouteSummary) {

@@ -35,7 +35,7 @@ func (cmd *Scale) MetaData() command_registry.CommandMetadata {
 
 	return command_registry.CommandMetadata{
 		Name:        "scale",
-		Description: T("Change or view the instance count, disk space limit, and memory limit for an app"),
+		Description: T("Change or view the instance count, disk space limit, memory limit, and bandwidth limit for an app"),
 		Usage:       T("CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [--bandwidth BANDWIDTH] [-f]"),
 		Flags:       fs,
 	}
@@ -70,6 +70,7 @@ func (cmd *Scale) SetDependency(deps command_registry.Dependency, pluginCall boo
 }
 
 var bytesInAMegabyte int64 = 1024 * 1024
+var bitsInAKilobit int64 = 1024
 
 func (cmd *Scale) Execute(c flags.FlagContext) {
 	currentApp := cmd.appReq.GetApplication()
@@ -87,7 +88,7 @@ func (cmd *Scale) Execute(c flags.FlagContext) {
 		cmd.ui.Say("%s %s", terminal.HeaderColor(T("memory:")), formatters.ByteSize(currentApp.Memory*bytesInAMegabyte))
 		cmd.ui.Say("%s %s", terminal.HeaderColor(T("disk:")), formatters.ByteSize(currentApp.DiskQuota*bytesInAMegabyte))
 		cmd.ui.Say("%s %d", terminal.HeaderColor(T("instances:")), currentApp.InstanceCount)
-		cmd.ui.Say("%s %d", terminal.HeaderColor(T("bandwidth:")), currentApp.Bandwidth)
+		cmd.ui.Say("%s %d", terminal.HeaderColor(T("bandwidth:")), formatters.BitSize(currentApp.Bandwidth*bitsInAKilobit))
 
 		return
 	}

@@ -71,6 +71,7 @@ var _ = Describe("list-apps command", func() {
 		app.RunningInstances = 1
 		app.InstanceCount = 1
 		app.Memory = 512
+		app.Bandwidth = 1024
 		app.DiskQuota = 1024
 		app.Routes = app1Routes
 
@@ -81,6 +82,7 @@ var _ = Describe("list-apps command", func() {
 		app2.RunningInstances = 1
 		app2.InstanceCount = 2
 		app2.Memory = 256
+		app2.Bandwidth = 512
 		app2.DiskQuota = 1024
 		app2.Routes = app2Routes
 
@@ -136,6 +138,8 @@ var _ = Describe("list-apps command", func() {
 			Ω(pluginAppModels[0].TotalInstances).To(Equal(1))
 			Ω(pluginAppModels[0].RunningInstances).To(Equal(1))
 			Ω(pluginAppModels[0].Memory).To(Equal(int64(512)))
+			Ω(pluginAppModels[0].Bandwidth).To(Equal(int64(1024)))
+			Ω(pluginAppModels[1].Bandwidth).To(Equal(int64(512)))
 			Ω(pluginAppModels[0].DiskQuota).To(Equal(int64(1024)))
 			Ω(pluginAppModels[0].Routes[0].Host).To(Equal("app1"))
 			Ω(pluginAppModels[0].Routes[1].Host).To(Equal("app1"))
@@ -153,8 +157,8 @@ var _ = Describe("list-apps command", func() {
 			Expect(ui.Outputs).To(ContainSubstrings(
 				[]string{"Getting apps in", "my-org", "my-space", "my-user"},
 				[]string{"OK"},
-				[]string{"Application-1", "started", "1/1", "512M", "1G", "app1.cfapps.io", "app1.example.com"},
-				[]string{"Application-2", "started", "1/2", "256M", "1G", "app2.cfapps.io"},
+				[]string{"Application-1", "started", "1/1", "512M", "1G", "1Mb", "app1.cfapps.io", "app1.example.com"},
+				[]string{"Application-2", "started", "1/2", "256M", "1G", "512Kb", "app2.cfapps.io"},
 			))
 		})
 
@@ -172,6 +176,7 @@ var _ = Describe("list-apps command", func() {
 				app.RunningInstances = -1
 				app.InstanceCount = 2
 				app.Memory = 512
+				app.Bandwidth = 1024
 				app.DiskQuota = 1024
 				app.Routes = appRoutes
 
@@ -182,7 +187,7 @@ var _ = Describe("list-apps command", func() {
 				Expect(ui.Outputs).To(ContainSubstrings(
 					[]string{"Getting apps in", "my-org", "my-space", "my-user"},
 					[]string{"OK"},
-					[]string{"Application-1", "started", "?/2", "512M", "1G", "app1.cfapps.io"},
+					[]string{"Application-1", "started", "?/2", "512M", "1G", "1Mb", "app1.cfapps.io"},
 				))
 			})
 		})

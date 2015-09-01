@@ -358,6 +358,7 @@ var _ = Describe("Push Command", func() {
 					"-k", "4G",
 					"-i", "3",
 					"-m", "2G",
+					"--bandwidth", "1Mb",
 					"-b", "https://github.com/heroku/heroku-buildpack-play.git",
 					"-s", "customLinux",
 					"-t", "1",
@@ -384,6 +385,7 @@ var _ = Describe("Push Command", func() {
 				Expect(*appRepo.CreatedAppParams().InstanceCount).To(Equal(3))
 				Expect(*appRepo.CreatedAppParams().DiskQuota).To(Equal(int64(4096)))
 				Expect(*appRepo.CreatedAppParams().Memory).To(Equal(int64(2048)))
+				Expect(*appRepo.CreatedAppParams().Bandwidth).To(Equal(int64(1024)))
 				Expect(*appRepo.CreatedAppParams().StackGuid).To(Equal("custom-linux-guid"))
 				Expect(*appRepo.CreatedAppParams().HealthCheckTimeout).To(Equal(1))
 				Expect(*appRepo.CreatedAppParams().BuildpackUrl).To(Equal("https://github.com/heroku/heroku-buildpack-play.git"))
@@ -582,6 +584,7 @@ var _ = Describe("Push Command", func() {
 
 				Expect(*appRepo.CreatedAppParams().Name).To(Equal("manifest-app-name"))
 				Expect(*appRepo.CreatedAppParams().Memory).To(Equal(int64(128)))
+				Expect(*appRepo.CreatedAppParams().Bandwidth).To(Equal(int64(512)))
 				Expect(*appRepo.CreatedAppParams().InstanceCount).To(Equal(1))
 				Expect(*appRepo.CreatedAppParams().StackName).To(Equal("custom-stack"))
 				Expect(*appRepo.CreatedAppParams().BuildpackUrl).To(Equal("some-buildpack"))
@@ -679,6 +682,15 @@ var _ = Describe("Push Command", func() {
 				Expect(ui.Outputs).To(ContainSubstrings(
 					[]string{"FAILED"},
 					[]string{"Invalid", "memory limit", "abcM"},
+				))
+			})
+
+			It("fails when given an invalid bandwidth limit", func() {
+				callPush("--bandwidth", "abcM", "my-new-app")
+
+				Expect(ui.Outputs).To(ContainSubstrings(
+					[]string{"FAILED"},
+					[]string{"Invalid", "bandwidth limit", "abcM"},
 				))
 			})
 
@@ -819,6 +831,7 @@ var _ = Describe("Push Command", func() {
 				"-c", "different start command",
 				"-i", "10",
 				"-m", "1G",
+				"--bandwidth", "1Mb",
 				"-b", "https://github.com/heroku/heroku-buildpack-different.git",
 				"-s", "differentStack",
 				"existing-app",
@@ -828,6 +841,7 @@ var _ = Describe("Push Command", func() {
 			Expect(*appRepo.UpdateParams.Command).To(Equal("different start command"))
 			Expect(*appRepo.UpdateParams.InstanceCount).To(Equal(10))
 			Expect(*appRepo.UpdateParams.Memory).To(Equal(int64(1024)))
+			Expect(*appRepo.UpdateParams.Bandwidth).To(Equal(int64(1024)))
 			Expect(*appRepo.UpdateParams.BuildpackUrl).To(Equal("https://github.com/heroku/heroku-buildpack-different.git"))
 			Expect(*appRepo.UpdateParams.StackGuid).To(Equal("differentStack-guid"))
 		})
@@ -1144,6 +1158,7 @@ func existingAppManifest() *manifest.Manifest {
 				generic.NewMap(map[interface{}]interface{}{
 					"name":      "manifest-app-name",
 					"memory":    "128MB",
+					"bandwidth": "512Kb",
 					"instances": 1,
 					"host":      "new-manifest-host",
 					"domain":    "example.com",
@@ -1170,6 +1185,7 @@ func multipleHostManifest() *manifest.Manifest {
 				generic.NewMap(map[interface{}]interface{}{
 					"name":      "manifest-app-name",
 					"memory":    "128MB",
+					"bandwidth": "512Kb",
 					"instances": 1,
 					"hosts":     []interface{}{"manifest-host-1", "manifest-host-2"},
 					"domain":    "manifest-example.com",
@@ -1196,6 +1212,7 @@ func multipleDomainsManifest() *manifest.Manifest {
 				generic.NewMap(map[interface{}]interface{}{
 					"name":      "manifest-app-name",
 					"memory":    "128MB",
+					"bandwidth": "512Kb",
 					"instances": 1,
 					"host":      "manifest-host",
 					"hosts":     []interface{}{"host2"},
@@ -1223,6 +1240,7 @@ func singleAppManifest() *manifest.Manifest {
 				generic.NewMap(map[interface{}]interface{}{
 					"name":      "manifest-app-name",
 					"memory":    "128MB",
+					"bandwidth": "512Kb",
 					"instances": 1,
 					"host":      "manifest-host",
 					"domain":    "manifest-example.com",

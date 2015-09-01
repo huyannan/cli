@@ -75,6 +75,8 @@ var _ = Describe("quotas command", func() {
 						Name:                    "quota-name",
 						MemoryLimit:             1024,
 						InstanceMemoryLimit:     -1,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  -1,
 						RoutesLimit:             111,
 						ServicesLimit:           222,
 						NonBasicServicesAllowed: true,
@@ -91,6 +93,8 @@ var _ = Describe("quotas command", func() {
 					[]string{"instance memory limit", "unlimited"},
 					[]string{"routes", "111"},
 					[]string{"service", "222"},
+					[]string{"total bandwidth limit", "1Mb"},
+					[]string{"instance bandwidth limit", "unlimited"},
 					[]string{"non basic services", "allowed"},
 				))
 			})

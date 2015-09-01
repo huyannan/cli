@@ -575,6 +575,11 @@
       "modified": true
    },
    {
+      "id": "Bit quantity must be an integer with a unit of measurement like K, Kb, M, Mb, G, or Gb",
+      "translation": "Bit quantity must be an integer with a unit of measurement like K, Kb, M, Mb, G, or Gb",
+      "modified": false
+   },
+   {
       "id": "CF_NAME add-plugin-repo [REPO_NAME] [URL]\n\nEXAMPLE:\n   cf add-plugin-repo PrivateRepo http://myprivaterepo.com/repo/\n",
       "translation": "CF_NAME add-plugin-repo [REPO_NAME] [URL]\n\nEXAMPLE:\n   cf add-plugin-repo PrivateRepo http://myprivaterepo.com/repo/\n",
       "modified": false
@@ -650,8 +655,8 @@
       "modified": false
    },
    {
-      "id": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
-      "translation": "CF_NAME create-quota QUOTA [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
+      "id": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
+      "translation": "CF_NAME create-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
       "modified": true
    },
    {
@@ -695,8 +700,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
-      "translation": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans]",
+      "id": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
+      "translation": "CF_NAME create-space-quota QUOTA [-i INSTANCE_MEMORY] [-m MEMORY] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans]",
       "modified": false
    },
    {
@@ -970,8 +975,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [-f]",
-      "translation": "CF_NAME scale APP [-i INSTANCES] [-k DISK] [-m MEMORY] [-f]",
+      "id": "CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [--bandwidth BANDWIDTH] [-f]",
+      "translation": "CF_NAME scale APP_NAME [-i INSTANCES] [-k DISK] [-m MEMORY] [--bandwidth BANDWIDTH] [-f]",
       "modified": true
    },
    {
@@ -1155,8 +1160,8 @@
       "modified": false
    },
    {
-      "id": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
-      "translation": "CF_NAME update-quota QUOTA [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "id": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "translation": "CF_NAME update-quota QUOTA [-m TOTAL_MEMORY] [-i INSTANCE_MEMORY][-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
       "modified": true
    },
    {
@@ -1180,8 +1185,8 @@
       "modified": true
    },
    {
-      "id": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
-      "translation": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--allow-non-basic-services | --disallow-non-basic-services]",
+      "id": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "translation": "CF_NAME update-space-quota SPACE-QUOTA-NAME [-i MAX-INSTANCE-MEMORY] [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICES] [--bandwidth BANDWIDTH] [--instance-bandwidth INSTANCE_BANDWIDTH] [--allow-paid-service-plans | --disallow-paid-service-plans]",
       "modified": true
    },
    {
@@ -1245,8 +1250,8 @@
       "modified": false
    },
    {
-      "id": "Change or view the instance count, disk space limit, and memory limit for an app",
-      "translation": "Change or view the instance count, disk space limit, and memory limit for an app",
+      "id": "Change or view the instance count, disk space limit, memory limit, and bandwidth limit for an app",
+      "translation": "Change or view the instance count, disk space limit, memory limit, and bandwidth limit for an app",
       "modified": false
    },
    {
@@ -2840,6 +2845,11 @@
       "modified": false
    },
    {
+      "id": "Instance Bandwidth",
+      "translation": "Instance Bandwidth",
+      "modified": false
+   },
+   {
       "id": "Instance must be a non-negative integer",
       "translation": "Instance must be a non-negative integer",
       "modified": false
@@ -2905,6 +2915,11 @@
       "modified": false
    },
    {
+      "id": "Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "translation": "Invalid instance bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "modified": false
+   },
+   {
       "id": "Invalid instance: {{.Instance}}\nInstance must be a positive integer",
       "translation": "Invalid instance: {{.Instance}}\nInstance must be a positive integer",
       "modified": false
@@ -2937,6 +2952,16 @@
    {
       "id": "Invalid memory limit: {{.Memory}}\n{{.ErrorDescription}}",
       "translation": "Invalid memory limit: {{.Memory}}\n{{.ErrorDescription}}",
+      "modified": false
+   },
+   {
+      "id": "Invalid bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "translation": "Invalid bandwidth limit: {{.BandwidthLimit}}\n{{.Err}}",
+      "modified": false
+   },
+   {
+      "id": "Invalid bandwidth limit: {{.Bandwidth}}\n{{.ErrorDescription}}",
+      "translation": "Invalid bandwidth limit: {{.Bandwidth}}\n{{.ErrorDescription}}",
       "modified": false
    },
    {
@@ -3155,6 +3180,21 @@
       "modified": true
    },
    {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M)",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M)",
+      "modified": false
+   },
+   {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.",
+      "modified": false
+   },
+   {
+      "id": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount. (Default: unlimited)",
+      "translation": "Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount. (Default: unlimited)",
+      "modified": false
+   },
+   {
       "id": "Maximum time (in seconds) for CLI to wait for application start, other server side timeouts may apply",
       "translation": "Start timeout in seconds",
       "modified": true
@@ -3162,6 +3202,11 @@
    {
       "id": "Memory limit (e.g. 256M, 1024M, 1G)",
       "translation": "Memory limit (e.g. 256M, 1024M, 1G)",
+      "modified": false
+   },
+   {
+      "id": "Bandwidth limit (e.g. 1024K, 1M, 10M)",
+      "translation": "Bandwidth limit (e.g. 1024K, 1M, 10M)",
       "modified": false
    },
    {
@@ -4500,8 +4545,18 @@
       "modified": true
    },
    {
+      "id": "Total Bandwidth",
+      "translation": "Total Bandwidth",
+      "modified": false
+   },
+   {
       "id": "Total amount of memory (e.g. 1024M, 1G, 10G)",
       "translation": "Total amount of memory (e.g. 1024M, 1G, 10G)",
+      "modified": false
+   },
+   {
+      "id": "Total amount of bandwidth (e.g. 1024K, 1M, 10M)",
+      "translation": "Total amount of bandwidth (e.g. 1024M, 1G, 10G)",
       "modified": false
    },
    {
@@ -5075,6 +5130,11 @@
       "modified": false
    },
    {
+      "id": "instance bandwidth limit",
+      "translation": "instance bandwidth limit",
+      "modified": false
+   },
+   {
       "id": "instance: {{.InstanceIndex}}, reason: {{.ExitDescription}}, exit_status: {{.ExitStatus}}",
       "translation": "instance: {{.InstanceIndex}}, reason: {{.ExitDescription}}, exit_status: {{.ExitStatus}}",
       "modified": false
@@ -5145,8 +5205,18 @@
       "modified": false
    },
    {
+      "id": "bandwidth",
+      "translation": "bandwidth",
+      "modified": false
+   },
+   {
       "id": "memory:",
       "translation": "memory:",
+      "modified": false
+   },
+   {
+      "id": "bandwidth:",
+      "translation": "bandwidth:",
       "modified": false
    },
    {
@@ -5365,6 +5435,11 @@
       "modified": true
    },
    {
+      "id": "total bandwidth limit",
+      "translation": "total bandwidth limit",
+      "modified": false
+   },
+   {
       "id": "unknown authority",
       "translation": "unknown authority",
       "modified": false
@@ -5515,9 +5590,9 @@
       "modified": false
    },
    {
-      "id": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, paid services {{.NonBasicServicesAllowed}})",
-      "translation": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, paid services {{.NonBasicServicesAllowed}})",
-      "modified": true
+      "id": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, {{.BandwidthLimit}}Kb bandwidth limit, {{.InstanceBandwidthLimit}} instance bandwidth limit, paid services {{.NonBasicServicesAllowed}})",
+      "translation": "{{.QuotaName}} ({{.MemoryLimit}}M memory limit, {{.InstanceMemoryLimit}} instance memory limit, {{.RoutesLimit}} routes, {{.ServicesLimit}} services, {{.BandwidthLimit}}Kb bandwidth limit, {{.InstanceBandwidthLimit}} instance bandwidth limit, paid services {{.NonBasicServicesAllowed}})",
+      "modified": false
    },
    {
       "id": "{{.RunningCount}} of {{.TotalCount}} instances running",

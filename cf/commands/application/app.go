@@ -270,7 +270,7 @@ func (cmd *ShowApp) ShowApp(app models.Application, orgName, spaceName string) {
 			i.MemQuota = instance.MemQuota
 			i.MemUsage = instance.MemUsage
 			i.BandwidthQuota = instance.BandwidthQuota // in Kilobits
-			i.BandwidthUsage = instance.BandwidthUsage
+			//i.BandwidthUsage = instance.BandwidthUsage
 			cmd.pluginAppModel.Instances = append(cmd.pluginAppModel.Instances, i)
 		}
 	}

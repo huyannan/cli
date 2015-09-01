@@ -32,7 +32,7 @@ func (cmd *CreateSpaceQuota) MetaData() command_registry.CommandMetadata {
 	fs["i"] = &cliFlags.StringFlag{Name: "i", Usage: T("Maximum amount of memory an application instance can have (e.g. 1024M, 1G, 10G). -1 represents an unlimited amount. (Default: unlimited)")}
 	fs["m"] = &cliFlags.StringFlag{Name: "m", Usage: T("Total amount of memory a space can have (e.g. 1024M, 1G, 10G)")}
 	fs["r"] = &cliFlags.IntFlag{Name: "r", Usage: T("Total number of routes")}
-	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount.")}
+	fs["instance-bandwidth"] = &cliFlags.StringFlag{Name: "instance-bandwidth", Usage: T("Maximum amount of bandwidth an application instance can have (e.g. 1024K, 1M, 10M). -1 represents an unlimited amount. (Default: unlimited)")}
 	fs["bandwidth"] = &cliFlags.StringFlag{Name: "bandwidth", Usage: T("Total amount of bandwidth (e.g. 1024K, 1M, 10M)")}
 	fs["s"] = &cliFlags.IntFlag{Name: "s", Usage: T("Total number of service instances")}
 

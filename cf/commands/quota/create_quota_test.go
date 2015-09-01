@@ -113,6 +113,48 @@ var _ = Describe("create-quota command", func() {
 				})
 			})
 		})
+
+		Context("when the --instance-bandwidth flag is not provided", func() {
+			It("defaults the instance bandwidth limit to unlimited", func() {
+				runCommand("my-quota")
+
+				Expect(quotaRepo.CreateArgsForCall(0).InstanceBandwidthLimit).To(Equal(int64(-1)))
+			})
+		})
+
+		Context("when the --bandwidth flag is provided", func() {
+			It("sets the bandwidth limit", func() {
+				runCommand("--bandwidth", "2Mb", "erryday makin fitty jeez")
+				Expect(quotaRepo.CreateArgsForCall(0).BandwidthLimit).To(Equal(int64(2048)))
+			})
+
+			It("alerts the user when parsing the bandwidth limit fails", func() {
+				runCommand("whoops", "12")
+
+				Expect(ui.Outputs).To(ContainSubstrings([]string{"FAILED"}))
+			})
+		})
+
+		Context("when the --instance-bandwidth flag is provided", func() {
+			It("sets the instance bandwidth limit", func() {
+				runCommand("--instance-bandwidth", "1Mb", "erryday makin fitty jeez")
+				Expect(quotaRepo.CreateArgsForCall(0).InstanceBandwidthLimit).To(Equal(int64(1024)))
+			})
+
+			It("alerts the user when parsing the instance bandwidth limit fails", func() {
+				runCommand("--instance-bandwidth", "whoops", "wit mah hussle", "12")
+
+				Expect(ui.Outputs).To(ContainSubstrings([]string{"FAILED"}))
+			})
+
+			Context("and the provided value is -1", func() {
+				It("sets the instance bandwidth limit", func() {
+					runCommand("--instance-bandwidth", "-1", "yo")
+					Expect(quotaRepo.CreateArgsForCall(0).InstanceBandwidthLimit).To(Equal(int64(-1)))
+				})
+			})
+		})
+
 		It("sets the route limit", func() {
 			runCommand("-r", "12", "ecstatic")
 

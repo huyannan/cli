@@ -127,7 +127,7 @@ func (cmd *UpdateSpaceQuota) Execute(c flags.FlagContext) {
 			}
 		}
 
-		spaceQuota.InstanceMemoryLimit = bandwidth
+		spaceQuota.InstanceBandwidthLimit = bandwidth
 	}
 
 	if c.String("bandwidth") != "" {

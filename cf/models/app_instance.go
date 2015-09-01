@@ -22,5 +22,5 @@ type AppInstanceFields struct {
 	MemQuota       int64
 	MemUsage       int64
 	BandwidthQuota int64 //in Kilobits
-	BandwidthUsage int64
+	//BandwidthUsage int64
 }

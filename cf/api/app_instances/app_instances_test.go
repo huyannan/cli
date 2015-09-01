@@ -45,6 +45,7 @@ var _ = Describe("AppInstancesRepo", func() {
 			Expect(instance0.MemQuota).To(Equal(int64(67108864)))
 			Expect(instance0.MemUsage).To(Equal(int64(19218432)))
 			Expect(instance0.CpuUsage).To(Equal(3.659571249238058e-05))
+			Expect(instance0.BandwidthQuota).To(Equal(int64(313415777)))
 		})
 	})
 
@@ -85,6 +86,7 @@ var appStatsRequest = testapi.NewCloudControllerTestRequest(testnet.TestRequest{
     "stats": {
         "disk_quota": 10000,
         "mem_quota": 1024,
+        "bandwidth_quota": 1024,
         "usage": {
             "cpu": 0.3,
             "disk": 10000,
@@ -96,6 +98,7 @@ var appStatsRequest = testapi.NewCloudControllerTestRequest(testnet.TestRequest{
     "stats": {
         "disk_quota": 1073741824,
         "mem_quota": 67108864,
+        "bandwidth_quota": 313415777,
         "usage": {
             "cpu": 3.659571249238058e-05,
             "disk": 56037376,

@@ -112,6 +112,10 @@ func (m *appManifest) Save() error {
 			return err
 		}
 
+		if _, err := fmt.Fprintf(f, "  bandwidth: %dKb\n", app.Bandwidth); err != nil {
+			return err
+		}
+
 		if _, err := fmt.Fprintf(f, "  instances: %d\n", app.InstanceCount); err != nil {
 			return err
 		}

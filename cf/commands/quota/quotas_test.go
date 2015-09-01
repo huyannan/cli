@@ -64,6 +64,8 @@ var _ = Describe("quotas command", func() {
 					Name:                    "quota-name",
 					MemoryLimit:             1024,
 					InstanceMemoryLimit:     512,
+					BandwidthLimit:          2048,
+					InstanceBandwidthLimit:  1024,
 					RoutesLimit:             111,
 					ServicesLimit:           222,
 					NonBasicServicesAllowed: true,
@@ -72,6 +74,8 @@ var _ = Describe("quotas command", func() {
 					Name:                    "quota-non-basic-not-allowed",
 					MemoryLimit:             434,
 					InstanceMemoryLimit:     -1,
+					BandwidthLimit:          1024,
+					InstanceBandwidthLimit:  -1,
 					RoutesLimit:             1,
 					ServicesLimit:           2,
 					NonBasicServicesAllowed: false,
@@ -84,9 +88,9 @@ var _ = Describe("quotas command", func() {
 			Expect(ui.Outputs).To(ContainSubstrings(
 				[]string{"Getting quotas as", "my-user"},
 				[]string{"OK"},
-				[]string{"name", "total memory limit", "instance memory limit", "routes", "service instances", "paid service plans"},
-				[]string{"quota-name", "1G", "512M", "111", "222", "allowed"},
-				[]string{"quota-non-basic-not-allowed", "434M", "unlimited", "1", "2", "disallowed"},
+				[]string{"name", "total memory limit", "instance memory limit", "routes", "service instances", "total bandwidth limit", "instance bandwidth limit", "paid service plans"},
+				[]string{"quota-name", "1G", "512M", "111", "222", "2Mb", "1Mb", "allowed"},
+				[]string{"quota-non-basic-not-allowed", "434M", "unlimited", "1", "2", "1Mb", "unlimited", "disallowed"},
 			))
 		})
 
@@ -96,6 +100,8 @@ var _ = Describe("quotas command", func() {
 					Name:                    "quota-with-no-limit-to-services",
 					MemoryLimit:             434,
 					InstanceMemoryLimit:     1,
+					BandwidthLimit:          1024,
+					InstanceBandwidthLimit:  -1,
 					RoutesLimit:             2,
 					ServicesLimit:           -1,
 					NonBasicServicesAllowed: false,
@@ -103,7 +109,7 @@ var _ = Describe("quotas command", func() {
 			}, nil)
 			Expect(Expect(runCommand()).To(HavePassedRequirements())).To(HavePassedRequirements())
 			Expect(ui.Outputs).To(ContainSubstrings(
-				[]string{"quota-with-no-limit-to-services", "434M", "1", "2", "unlimited", "disallowed"},
+				[]string{"quota-with-no-limit-to-services", "434M", "1", "2", "unlimited", "1Mb", "unlimited", "disallowed"},
 			))
 		})
 	})

@@ -59,6 +59,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 				MemoryLimit:             1024,
 				RoutesLimit:             123,
 				ServicesLimit:           321,
+				BandwidthLimit:          234,
+				InstanceBandwidthLimit:  20,
 				NonBasicServicesAllowed: true,
 				OrgGuid:                 "my-org-guid",
 			}))
@@ -89,6 +91,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 			Expect(quotas[0].RoutesLimit).To(Equal(123))
 			Expect(quotas[0].ServicesLimit).To(Equal(321))
 			Expect(quotas[0].OrgGuid).To(Equal("my-org-guid"))
+			Expect(quotas[0].BandwidthLimit).To(Equal(int64(234)))
+			Expect(quotas[0].InstanceBandwidthLimit).To(Equal(int64(20)))
 
 			Expect(quotas[1].Guid).To(Equal("my-quota-guid2"))
 			Expect(quotas[1].OrgGuid).To(Equal("my-org-guid"))
@@ -114,6 +118,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 				RoutesLimit:             123,
 				ServicesLimit:           321,
 				NonBasicServicesAllowed: true,
+				BandwidthLimit:          234,
+				InstanceBandwidthLimit:  20,
 				OrgGuid:                 "my-org-guid",
 			}))
 		})
@@ -168,6 +174,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 					"total_routes": 12,
 					"memory_limit": 123,
 					"instance_memory_limit": 0,
+					"bandwidth_in_kb_limit": 234,
+					"instance_bandwidth_in_kb_limit": -1,
 					"organization_guid": "my-org-guid"
 				}`),
 				Response: testnet.TestResponse{Status: http.StatusCreated},
@@ -175,11 +183,13 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 			setupTestServer(req)
 
 			quota := models.SpaceQuota{
-				Name:          "not-so-strict",
-				ServicesLimit: 1,
-				RoutesLimit:   12,
-				MemoryLimit:   123,
-				OrgGuid:       "my-org-guid",
+				Name:                   "not-so-strict",
+				ServicesLimit:          1,
+				RoutesLimit:            12,
+				MemoryLimit:            123,
+				BandwidthLimit:         234,
+				InstanceBandwidthLimit: -1,
+				OrgGuid:                "my-org-guid",
 			}
 			err := repo.Create(quota)
 			Expect(err).NotTo(HaveOccurred())
@@ -200,6 +210,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 					"total_routes": 12,
 					"memory_limit": 123,
 					"instance_memory_limit": 1234,
+					"bandwidth_in_kb_limit": 234,
+					"instance_bandwidth_in_kb_limit": 10,
 					"organization_guid": "myorgguid"
 				}`),
 			}))
@@ -212,6 +224,8 @@ var _ = Describe("CloudControllerQuotaRepository", func() {
 				RoutesLimit:             12,
 				MemoryLimit:             123,
 				InstanceMemoryLimit:     1234,
+				BandwidthLimit:          234,
+				InstanceBandwidthLimit:  10,
 				OrgGuid:                 "myorgguid",
 			}
 
@@ -294,7 +308,9 @@ var firstSpaceQuotaRequest = testapi.NewCloudControllerTestRequest(testnet.TestR
 			  	"total_routes": 123,
 			  	"total_services": 321,
 			  	"non_basic_services_allowed": true,
-			  	"organization_guid": "my-org-guid"
+			  	"organization_guid": "my-org-guid",
+			  	"bandwidth_in_kb_limit": 234,
+			  	"instance_bandwidth_in_kb_limit": 20
 			  }
 			}
 		]}`,

@@ -2,6 +2,7 @@
 app_types:
   app_a: &APP_A
     memory: 256mb
+    bandwidth: 1024Kb
     instances: 1
 
 applications:

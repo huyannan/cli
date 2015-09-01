@@ -88,13 +88,14 @@ var _ = Describe("create-app-manifest Command", func() {
 
 		BeforeEach(func() {
 			appInstance = models.AppInstanceFields{
-				State:     models.InstanceRunning,
-				Since:     testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
-				CpuUsage:  1.0,
-				DiskQuota: 1 * formatters.GIGABYTE,
-				DiskUsage: 32 * formatters.MEGABYTE,
-				MemQuota:  64 * formatters.MEGABYTE,
-				MemUsage:  13 * formatters.BYTE,
+				State:          models.InstanceRunning,
+				Since:          testtime.MustParse("Mon Jan 2 15:04:05 -0700 MST 2006", "Mon Jan 2 15:04:05 -0700 MST 2012"),
+				CpuUsage:       1.0,
+				DiskQuota:      1 * formatters.GIGABYTE,
+				DiskUsage:      32 * formatters.MEGABYTE,
+				MemQuota:       64 * formatters.MEGABYTE,
+				MemUsage:       13 * formatters.BYTE,
+				BandwidthQuota: 1024 * formatters.KILOBIT,
 			}
 
 			appInstance2 = models.AppInstanceFields{
@@ -116,6 +117,7 @@ var _ = Describe("create-app-manifest Command", func() {
 			It("creates a manifest with services, routes and environment vars", func() {
 				runCommand("my-app")
 				Ω(fakeManifest.MemoryCallCount()).To(Equal(1))
+				Ω(fakeManifest.BandwidthCallCount()).To(Equal(1))
 				Ω(fakeManifest.EnvironmentVarsCallCount()).To(Equal(1))
 				Ω(fakeManifest.HealthCheckTimeoutCallCount()).To(Equal(1))
 				Ω(fakeManifest.InstancesCallCount()).To(Equal(1))
@@ -190,6 +192,7 @@ var _ = Describe("create-app-manifest Command", func() {
 			It("creates a manifest with services, routes and environment vars", func() {
 				runCommand("my-app")
 				Ω(fakeManifest.MemoryCallCount()).To(Equal(1))
+				Ω(fakeManifest.BandwidthCallCount()).To(Equal(1))
 				Ω(fakeManifest.EnvironmentVarsCallCount()).To(Equal(0))
 				Ω(fakeManifest.HealthCheckTimeoutCallCount()).To(Equal(0))
 				Ω(fakeManifest.InstancesCallCount()).To(Equal(1))
@@ -246,6 +249,7 @@ func makeAppWithOptions(appName string) models.Application {
 	application.InstanceCount = 2
 	application.RunningInstances = 2
 	application.Memory = 256
+	application.Bandwidth = 1024
 	application.HealthCheckTimeout = 100
 	application.Routes = []models.RouteSummary{route, secondRoute}
 	application.PackageUpdatedAt = &packgeUpdatedAt
@@ -272,6 +276,7 @@ func makeAppWithoutOptions(appName string) models.Application {
 	application.InstanceCount = 2
 	application.RunningInstances = 2
 	application.Memory = 256
+	application.Bandwidth = 1024
 	application.PackageUpdatedAt = &packgeUpdatedAt
 
 	return application
@@ -287,6 +292,7 @@ func makeAppWithMultipleEnvVars(appName string) models.Application {
 	application.InstanceCount = 2
 	application.RunningInstances = 2
 	application.Memory = 256
+	application.Bandwidth = 1024
 	application.PackageUpdatedAt = &packgeUpdatedAt
 
 	envMap := make(map[string]interface{})

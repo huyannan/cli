@@ -84,8 +84,8 @@ func (cmd *showQuota) Execute(c flags.FlagContext) {
 	table.Add(T("Instance Memory"), megabytes)
 	table.Add(T("Routes"), fmt.Sprintf("%d", quota.RoutesLimit))
 	table.Add(T("Services"), servicesLimit)
-	table.Add(T("Paid service plans"), formatters.Allowed(quota.NonBasicServicesAllowed))
 	table.Add(T("Total Bandwidth"), formatters.BitSize(quota.BandwidthLimit*formatters.KILOBIT))
 	table.Add(T("Instance Bandwidth"), kilobits)
+	table.Add(T("Paid service plans"), formatters.Allowed(quota.NonBasicServicesAllowed))
 	table.Print()
 }

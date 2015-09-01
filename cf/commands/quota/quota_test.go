@@ -72,6 +72,8 @@ var _ = Describe("quota", func() {
 						Name:                    "muh-muh-muh-my-qua-quota",
 						MemoryLimit:             512,
 						InstanceMemoryLimit:     5,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  512,
 						RoutesLimit:             2000,
 						ServicesLimit:           47,
 						NonBasicServicesAllowed: true,
@@ -88,18 +90,22 @@ var _ = Describe("quota", func() {
 						[]string{"Instance Memory", "5M"},
 						[]string{"Routes", "2000"},
 						[]string{"Services", "47"},
+						[]string{"Total Bandwidth", "1Mb"},
+						[]string{"Instance Bandwidth", "512Kb"},
 						[]string{"Paid service plans", "allowed"},
 					))
 				})
 			})
 
-			Context("when instance memory limit is -1", func() {
+			Context("when instance bandwidth limit is -1", func() {
 				BeforeEach(func() {
 					quotaRepo.FindByNameReturns(models.QuotaFields{
 						Guid:                    "my-quota-guid",
 						Name:                    "muh-muh-muh-my-qua-quota",
 						MemoryLimit:             512,
 						InstanceMemoryLimit:     -1,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  -1,
 						RoutesLimit:             2000,
 						ServicesLimit:           47,
 						NonBasicServicesAllowed: true,
@@ -116,6 +122,40 @@ var _ = Describe("quota", func() {
 						[]string{"Instance Memory", "unlimited"},
 						[]string{"Routes", "2000"},
 						[]string{"Services", "47"},
+						[]string{"Total Bandwidth", "1Mb"},
+						[]string{"Instance Bandwidth", "unlimited"},
+						[]string{"Paid service plans", "allowed"},
+					))
+				})
+			})
+
+			Context("when instance memory limit is -1", func() {
+				BeforeEach(func() {
+					quotaRepo.FindByNameReturns(models.QuotaFields{
+						Guid:                    "my-quota-guid",
+						Name:                    "muh-muh-muh-my-qua-quota",
+						MemoryLimit:             512,
+						InstanceMemoryLimit:     -1,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  -1,
+						RoutesLimit:             2000,
+						ServicesLimit:           47,
+						NonBasicServicesAllowed: true,
+					}, nil)
+				})
+
+				It("shows you that quota", func() {
+					runCommand("muh-muh-muh-my-qua-quota")
+
+					Expect(ui.Outputs).To(ContainSubstrings(
+						[]string{"Getting quota", "muh-muh-muh-my-qua-quota", "my-user"},
+						[]string{"OK"},
+						[]string{"Total Memory", "512M"},
+						[]string{"Instance Memory", "unlimited"},
+						[]string{"Routes", "2000"},
+						[]string{"Services", "47"},
+						[]string{"Total Bandwidth", "1Mb"},
+						[]string{"Instance Bandwidth", "unlimited"},
 						[]string{"Paid service plans", "allowed"},
 					))
 				})
@@ -128,6 +168,8 @@ var _ = Describe("quota", func() {
 						Name:                    "muh-muh-muh-my-qua-quota",
 						MemoryLimit:             512,
 						InstanceMemoryLimit:     14,
+						BandwidthLimit:          1024,
+						InstanceBandwidthLimit:  -1,
 						RoutesLimit:             2000,
 						ServicesLimit:           -1,
 						NonBasicServicesAllowed: true,
@@ -144,6 +186,8 @@ var _ = Describe("quota", func() {
 						[]string{"Instance Memory", "14M"},
 						[]string{"Routes", "2000"},
 						[]string{"Services", "unlimited"},
+						[]string{"Total Bandwidth", "1Mb"},
+						[]string{"Instance Bandwidth", "unlimited"},
 						[]string{"Paid service plans", "allowed"},
 					))
 				})

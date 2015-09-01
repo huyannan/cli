@@ -212,6 +212,9 @@ func (repo *FakeApplicationRepository) Create(params models.AppParams) (resultAp
 	if params.EnvironmentVars != nil {
 		resultApp.EnvironmentVars = *params.EnvironmentVars
 	}
+	if params.Bandwidth != nil {
+		resultApp.Bandwidth = *params.Bandwidth
+	}
 
 	return
 }

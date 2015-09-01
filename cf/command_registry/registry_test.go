@@ -173,12 +173,12 @@ var _ = Describe("CommandRegistry", func() {
 				))
 			})
 
-			It("prefixes multi-character bool flags with '--'", func() {
+			It("prefixes multi-character bool and non-bool flags with '--'", func() {
 				o := Commands.CommandUsage("fake-command")
 				outputs := strings.Split(o, "\n")
 				Ω(outputs).To(BeInDisplayOrder(
 					[]string{"OPTIONS:"},
-					[]string{" -intFlag", "Usage for"},
+					[]string{" --intFlag", "Usage for"},
 					[]string{" --boolFlag", "Usage for"},
 				))
 			})

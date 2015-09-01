@@ -63,6 +63,7 @@ var _ = Describe("AppSummaryRepository", func() {
 		Expect(app1.InstanceCount).To(Equal(1))
 		Expect(app1.RunningInstances).To(Equal(1))
 		Expect(app1.Memory).To(Equal(int64(128)))
+		Expect(app1.Bandwidth).To(Equal(int64(512)))
 		Expect(app1.PackageUpdatedAt.Format("2006-01-02T15:04:05Z07:00")).To(Equal("2014-10-24T19:54:00Z"))
 
 		app2 := apps[1]
@@ -76,6 +77,7 @@ var _ = Describe("AppSummaryRepository", func() {
 		Expect(app2.InstanceCount).To(Equal(3))
 		Expect(app2.RunningInstances).To(Equal(1))
 		Expect(app2.Memory).To(Equal(int64(512)))
+		Expect(app2.Bandwidth).To(Equal(int64(1024)))
 		Expect(app2.PackageUpdatedAt.Format("2006-01-02T15:04:05Z07:00")).To(Equal("2012-10-24T19:55:00Z"))
 
 		nullUpdateAtApp := apps[2]
@@ -101,6 +103,7 @@ const getAppSummariesResponseBody string = `
       "running_instances":1,
       "name":"app1",
       "memory":128,
+      "bandwidth_in_kb":512,
       "instances":1,
 			"buildpack":"go_buildpack",
       "state":"STARTED",
@@ -131,6 +134,7 @@ const getAppSummariesResponseBody string = `
       "running_instances":1,
       "name":"app2",
       "memory":512,
+      "bandwidth_in_kb":1024,
       "instances":3,
       "state":"STARTED",
       "service_names":[
@@ -152,6 +156,7 @@ const getAppSummariesResponseBody string = `
       "running_instances":1,
       "name":"app-with-null-updated-at",
 			"memory":512,
+			"bandwidth_in_kb":2048,
       "instances":3,
       "state":"STARTED",
       "service_names":[

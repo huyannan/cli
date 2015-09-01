@@ -112,6 +112,8 @@ var _ = Describe("space command", func() {
 			quota.Name = "runaway"
 			quota.MemoryLimit = 102400
 			quota.InstanceMemoryLimit = -1
+			quota.BandwidthLimit = 1024
+			quota.InstanceBandwidthLimit = -1
 			quota.RoutesLimit = 111
 			quota.ServicesLimit = 222
 			quota.NonBasicServicesAllowed = false
@@ -167,7 +169,7 @@ var _ = Describe("space command", func() {
 					[]string{"Domains", "domain1"},
 					[]string{"Services", "service1"},
 					[]string{"Security Groups", "Nacho Security", "Nacho Prime"},
-					[]string{"Space Quota", "runaway (100G memory limit, -1 instance memory limit, 111 routes, 222 services, paid services disallowed)"},
+					[]string{"Space Quota", "runaway (100G memory limit, -1 instance memory limit, 111 routes, 222 services, 1Mb bandwidth limit, -1 instance bandwidth limit, paid services disallowed)"},
 				))
 			})
 
@@ -244,6 +246,8 @@ var _ = Describe("space command", func() {
 				Ω(pluginModel.SpaceQuota.Guid).To(Equal("runaway-guid"))
 				Ω(pluginModel.SpaceQuota.MemoryLimit).To(Equal(int64(102400)))
 				Ω(pluginModel.SpaceQuota.InstanceMemoryLimit).To(Equal(int64(-1)))
+				Ω(pluginModel.SpaceQuota.BandwidthLimit).To(Equal(int64(1024)))
+				Ω(pluginModel.SpaceQuota.InstanceBandwidthLimit).To(Equal(int64(-1)))
 				Ω(pluginModel.SpaceQuota.RoutesLimit).To(Equal(111))
 				Ω(pluginModel.SpaceQuota.ServicesLimit).To(Equal(222))
 				Ω(pluginModel.SpaceQuota.NonBasicServicesAllowed).To(BeFalse())

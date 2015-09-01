@@ -99,6 +99,7 @@ var _ = Describe("scale command", func() {
 			app.InstanceCount = 42
 			app.DiskQuota = 1024
 			app.Memory = 256
+			app.Bandwidth = 512
 
 			requirementsFactory.Application = app
 			appRepo.UpdateAppResult = app
@@ -114,6 +115,7 @@ var _ = Describe("scale command", func() {
 					[]string{"memory", "256M"},
 					[]string{"disk", "1G"},
 					[]string{"instances", "42"},
+					[]string{"bandwidth", "512Kb"},
 				))
 
 				Expect(ui.Outputs).ToNot(ContainSubstrings([]string{"Scaling", "my-app", "my-org", "my-space", "my-user"}))
@@ -145,8 +147,8 @@ var _ = Describe("scale command", func() {
 				ui.Inputs = []string{"yes"}
 			})
 
-			It("can set an app's instance count, memory limit and disk limit", func() {
-				testcmd.RunCliCommand("scale", []string{"-i", "5", "-m", "512M", "-k", "2G", "my-app"}, requirementsFactory, updateCommandDependency, false)
+			It("can set an app's instance count, memory limit, disk limit and bandwidth limit", func() {
+				testcmd.RunCliCommand("scale", []string{"-i", "5", "-m", "512M", "-k", "2G", "--bandwidth", "1024Kb", "my-app"}, requirementsFactory, updateCommandDependency, false)
 
 				Expect(ui.Outputs).To(ContainSubstrings(
 					[]string{"Scaling", "my-app", "my-org", "my-space", "my-user"},
@@ -164,9 +166,10 @@ var _ = Describe("scale command", func() {
 				Expect(*appRepo.UpdateParams.Memory).To(Equal(int64(512)))
 				Expect(*appRepo.UpdateParams.InstanceCount).To(Equal(5))
 				Expect(*appRepo.UpdateParams.DiskQuota).To(Equal(int64(2048)))
+				Expect(*appRepo.UpdateParams.Bandwidth).To(Equal(int64(1024)))
 			})
 
-			It("does not scale the memory and disk limits if they are not specified", func() {
+			It("does not scale the memory, disk and bandwidth limits if they are not specified", func() {
 				testcmd.RunCliCommand("scale", []string{"-i", "5", "my-app"}, requirementsFactory, updateCommandDependency, false)
 
 				Expect(restarter.ApplicationRestartCallCount()).To(Equal(0))
@@ -175,10 +178,11 @@ var _ = Describe("scale command", func() {
 				Expect(*appRepo.UpdateParams.InstanceCount).To(Equal(5))
 				Expect(appRepo.UpdateParams.DiskQuota).To(BeNil())
 				Expect(appRepo.UpdateParams.Memory).To(BeNil())
+				Expect(appRepo.UpdateParams.Bandwidth).To(BeNil())
 			})
 
 			It("does not scale the app's instance count if it is not specified", func() {
-				testcmd.RunCliCommand("scale", []string{"-m", "512M", "my-app"}, requirementsFactory, updateCommandDependency, false)
+				testcmd.RunCliCommand("scale", []string{"-m", "512M", "--bandwidth", "1M", "my-app"}, requirementsFactory, updateCommandDependency, false)
 
 				application, orgName, spaceName := restarter.ApplicationRestartArgsForCall(0)
 				Expect(application).To(Equal(app))
@@ -187,6 +191,7 @@ var _ = Describe("scale command", func() {
 
 				Expect(appRepo.UpdateAppGuid).To(Equal("my-app-guid"))
 				Expect(*appRepo.UpdateParams.Memory).To(Equal(int64(512)))
+				Expect(*appRepo.UpdateParams.Bandwidth).To(Equal(int64(1024)))
 				Expect(appRepo.UpdateParams.DiskQuota).To(BeNil())
 				Expect(appRepo.UpdateParams.InstanceCount).To(BeNil())
 			})
